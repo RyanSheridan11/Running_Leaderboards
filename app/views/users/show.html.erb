@@ -1,0 +1,154 @@
+<div class="profile-header">
+  <h1><%= @user.username %>'s Profile</h1>
+  <% if @user.admin? %>
+    <span class="admin-badge">Admin</span>
+  <% end %>
+</div>
+
+<div class="profile-stats">
+  <div class="stat-card">
+    <h3><%= @user.runs.count %></h3>
+    <p>Total Runs</p>
+  </div>
+
+  <div class="stat-card">
+    <h3><%= @user.runs.where(race_type: "5k").count %></h3>
+    <p>5k Runs</p>
+  </div>
+
+  <div class="stat-card">
+    <h3><%= @user.runs.where(race_type: "bronco").count %></h3>
+    <p>Bronco Runs</p>
+  </div>
+
+  <div class="stat-card">
+    <% best_5k = @user.runs.where(race_type: "5k").order(:time).first %>
+    <h3><%= best_5k ? format_time(best_5k.time, "5k") : "N/A" %></h3>
+    <p>Best 5k Time</p>
+  </div>
+
+  <div class="stat-card">
+    <% best_bronco = @user.runs.where(race_type: "bronco").order(:time).first %>
+    <h3><%= best_bronco ? format_time(best_bronco.time, "bronco") : "N/A" %></h3>
+    <p>Best Bronco Time</p>
+  </div>
+</div>
+
+<div class="runs-section">
+  <h2><%= @user.username %>'s Runs</h2>
+
+  <% if @runs.any? %>
+    <div class="table-container">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Race Type</th>
+            <th>Time</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @runs.each do |run| %>
+            <tr>
+              <td>
+                <span class="race-type-badge <%= run.race_type %>">
+                  <%= run.race_type.upcase %>
+                </span>
+              </td>
+              <td><%= format_time(run.time, run.race_type) %></td>
+              <td><%= run.date.strftime("%B %d, %Y") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p><%= @user.username %> hasn't recorded any runs yet.</p>
+    </div>
+  <% end %>
+</div>
+
+<div class="back-link">
+  <%= link_to "← Back to Leaderboard", root_path, class: "btn btn-secondary" %>
+</div>
+
+<style>
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .profile-header h1 {
+    margin: 0;
+  }
+
+  .admin-badge {
+    background-color: #d32f2f;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .stat-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    color: var(--primary-color);
+  }
+
+  .stat-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .runs-section h2 {
+    margin-bottom: 1rem;
+  }
+
+  .race-type-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .race-type-badge.5k {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  .race-type-badge.bronco {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+
+  .back-link {
+    margin-top: 2rem;
+  }
+</style>

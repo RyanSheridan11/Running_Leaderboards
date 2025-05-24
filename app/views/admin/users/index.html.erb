@@ -1,0 +1,96 @@
+<h1>Admin Panel - All Users</h1>
+
+<div class="admin-controls">
+  <%= link_to "Manage Runs", admin_runs_path, class: "btn btn-outline-primary" %>
+  <%= link_to "Race Deadlines", admin_race_deadlines_path, class: "btn btn-outline-primary" %>
+</div>
+
+<div class="table-container">
+  <table class="leaderboard-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Admin</th>
+        <th>Total Runs</th>
+        <th>5k Runs</th>
+        <th>Bronco Runs</th>
+        <th>Best 5k Time</th>
+        <th>Best Bronco Time</th>
+        <th>Member Since</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <%= link_to user.username, user_path(user), class: "user-link" %>
+          </td>
+          <td>
+            <% if user.admin? %>
+              <span class="admin-badge">Admin</span>
+            <% else %>
+              <span class="user-badge">User</span>
+            <% end %>
+          </td>
+          <td><%= user.runs.count %></td>
+          <td><%= user.runs.where(race_type: "5k").count %></td>
+          <td><%= user.runs.where(race_type: "bronco").count %></td>
+          <td>
+            <% best_5k = user.runs.where(race_type: "5k").order(:time).first %>
+            <%= best_5k ? format_time(best_5k.time, "5k") : "N/A" %>
+          </td>
+          <td>
+            <% best_bronco = user.runs.where(race_type: "bronco").order(:time).first %>
+            <%= best_bronco ? format_time(best_bronco.time, "bronco") : "N/A" %>
+          </td>
+          <td><%= user.created_at.strftime("%B %d, %Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @users.empty? %>
+    <div class="empty-state">
+      <p>No users found.</p>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .admin-controls {
+    margin-bottom: 2rem;
+  }
+
+  .admin-badge {
+    background-color: #d32f2f;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .user-badge {
+    background-color: #388e3c;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .user-link {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+
+  .user-link:hover {
+    text-decoration: underline;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+</style>

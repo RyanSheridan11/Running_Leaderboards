@@ -1,12 +1,22 @@
 Rails.application.routes.draw do
   root "runs#index"
 
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :show]
   resources :runs, only: [:new, :create, :index, :edit, :update, :destroy]
 
   get    "/login",  to: "sessions#new"
   post   "/login",  to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
+
+  # User profiles
+  get "/profile", to: "users#profile"
+
+  # Admin routes
+  namespace :admin do
+    resources :runs, only: [:index, :destroy]
+    resources :users, only: [:index]
+    resources :race_deadlines
+  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

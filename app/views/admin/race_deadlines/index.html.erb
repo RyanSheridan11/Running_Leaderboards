@@ -1,0 +1,133 @@
+<h1>Admin Panel - Race Deadlines</h1>
+
+<div class="admin-controls">
+  <%= link_to "New Race Deadline", new_admin_race_deadline_path, class: "btn btn-primary" %>
+  <%= link_to "Manage Runs", admin_runs_path, class: "btn btn-outline-primary" %>
+  <%= link_to "Manage Users", admin_users_path, class: "btn btn-outline-primary" %>
+</div>
+
+<div class="table-container">
+  <table class="leaderboard-table">
+    <thead>
+      <tr>
+        <th>Race Type</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th>Days Remaining</th>
+        <th>Description</th>
+        <th>Submissions</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @race_deadlines.each do |deadline| %>
+        <tr>
+          <td>
+            <span class="race-type-badge <%= deadline.race_type %>">
+              <%= deadline.race_type.upcase %>
+            </span>
+          </td>
+          <td><%= deadline.due_date.strftime("%B %d, %Y") %></td>
+          <td>
+            <% if deadline.active? %>
+              <% if deadline.overdue? %>
+                <span class="status-badge overdue">Overdue</span>
+              <% else %>
+                <span class="status-badge active">Active</span>
+              <% end %>
+            <% else %>
+              <span class="status-badge inactive">Inactive</span>
+            <% end %>
+          </td>
+          <td>
+            <% if deadline.active? && !deadline.overdue? %>
+              <%= deadline.days_remaining %> days
+            <% elsif deadline.overdue? %>
+              <span class="text-danger"><%= deadline.days_remaining.abs %> days overdue</span>
+            <% else %>
+              -
+            <% end %>
+          </td>
+          <td><%= truncate(deadline.description, length: 50) if deadline.description %></td>
+          <td>
+            <%= link_to "View Submissions", admin_race_deadline_path(deadline), class: "btn btn-sm btn-outline-primary" %>
+          </td>
+          <td>
+            <div class="table-actions">
+              <%= link_to "Edit", edit_admin_race_deadline_path(deadline), class: "btn btn-sm btn-secondary" %>
+              <%= link_to "Delete", admin_race_deadline_path(deadline),
+                  method: :delete,
+                  class: "btn btn-sm btn-danger",
+                  confirm: "Are you sure?",
+                  data: { turbo_method: :delete } %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @race_deadlines.empty? %>
+    <div class="empty-state">
+      <p>No race deadlines found.</p>
+      <%= link_to "Create First Deadline", new_admin_race_deadline_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .admin-controls {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .status-badge.active {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .status-badge.overdue {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .status-badge.inactive {
+    background-color: #f8f9fa;
+    color: #6c757d;
+  }
+
+  .text-danger {
+    color: #dc3545;
+  }
+
+  .race-type-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .race-type-badge.5k {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  .race-type-badge.bronco {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+</style>

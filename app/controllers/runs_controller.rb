@@ -4,7 +4,8 @@ class RunsController < ApplicationController
   before_action :check_owner, only: [:edit, :update, :destroy]
 
   def index
-    @runs = Run.includes(:user).order(:time)
+    @five_k_runs = Run.five_k.includes(:user).order(:time)
+    @bronco_runs = Run.bronco.includes(:user).order(:time)
   end
 
   def new
@@ -13,12 +14,14 @@ class RunsController < ApplicationController
 
   def create
     @run = current_user.runs.build(run_params)
-    time_in_seconds = convert_time_to_seconds(params[:run][:time])
+    race_type = params[:run][:race_type] || "5k"
+    time_in_seconds = convert_time_to_seconds(params[:run][:time], race_type)
 
     if params[:run][:time].present?
       case time_in_seconds
       when nil
-        @run.errors.add(:time, "must be in mm:ss format (e.g. 25:30)")
+        format_example = race_type == "bronco" ? "5:30" : "25:30"
+        @run.errors.add(:time, "must be in #{race_type == 'bronco' ? 'm:ss' : 'mm:ss'} format (e.g. #{format_example})")
         render :new and return
       when :invalid_minutes
         @run.errors.add(:time, "minutes must be less than 60")
@@ -41,12 +44,14 @@ class RunsController < ApplicationController
   end
 
   def update
-    time_in_seconds = convert_time_to_seconds(params[:run][:time])
+    race_type = params[:run][:race_type] || @run.race_type
+    time_in_seconds = convert_time_to_seconds(params[:run][:time], race_type)
 
     if params[:run][:time].present?
       case time_in_seconds
       when nil
-        @run.errors.add(:time, "must be in mm:ss format (e.g. 25:30)")
+        format_example = race_type == "bronco" ? "5:30" : "25:30"
+        @run.errors.add(:time, "must be in #{race_type == 'bronco' ? 'm:ss' : 'mm:ss'} format (e.g. #{format_example})")
         render :edit and return
       when :invalid_minutes
         @run.errors.add(:time, "minutes must be less than 60")
@@ -84,26 +89,43 @@ class RunsController < ApplicationController
   end
 
   def run_params
-    params.require(:run).permit(:date)
+    params.require(:run).permit(:date, :race_type)
   end
 
-  def convert_time_to_seconds(time_string)
+  def convert_time_to_seconds(time_string, race_type = "5k")
     return nil unless time_string.present?
 
-    if time_string.match(/\A(\d+):(\d{2})\z/)
-      minutes = $1.to_i
-      seconds = $2.to_i
+    # For bronco (1.2k), accept m:ss format; for 5k, accept mm:ss format
+    if race_type == "bronco"
+      if time_string.match(/\A(\d{1,2}):(\d{2})\z/)
+        minutes = $1.to_i
+        seconds = $2.to_i
 
-      # Validate that minutes and seconds are within valid ranges
-      if minutes >= 60
-        return :invalid_minutes
-      elsif seconds >= 60
-        return :invalid_seconds
+        if minutes >= 60
+          return :invalid_minutes
+        elsif seconds >= 60
+          return :invalid_seconds
+        else
+          (minutes * 60) + seconds
+        end
       else
-        (minutes * 60) + seconds
+        nil
       end
     else
-      nil
+      if time_string.match(/\A(\d+):(\d{2})\z/)
+        minutes = $1.to_i
+        seconds = $2.to_i
+
+        if minutes >= 60
+          return :invalid_minutes
+        elsif seconds >= 60
+          return :invalid_seconds
+        else
+          (minutes * 60) + seconds
+        end
+      else
+        nil
+      end
     end
   end
 end

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "redeploy-running-leaderboard",
+    "execute-command": "/deploy.sh",
+    "command-working-directory": "/",
+    "response-message": "Deployment triggered",
+    "trigger-rule": {
+      "and": [
+        {
+          "match": {
+            "type": "payload-hash-sha1",
+            "secret": "your-webhook-secret-here",
+            "parameter": {
+              "source": "header",
+              "name": "X-Hub-Signature"
+            }
+          }
+        },
+        {
+          "match": {
+            "type": "value",
+            "value": "refs/heads/main",
+            "parameter": {
+              "source": "payload",
+              "name": "ref"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

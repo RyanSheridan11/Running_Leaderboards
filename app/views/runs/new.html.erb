@@ -1,4 +1,4 @@
-<h1>Add a 5k Run</h1>
+<h1>Add a Run</h1>
 
 <%= form_with model: @run, url: runs_path, local: true do |form| %>
   <% if @run.errors.any? %>
@@ -11,15 +11,41 @@
     </div>
   <% end %>
   <div>
+    <%= form.label :race_type, "Race Type" %><br>
+    <%= form.select :race_type, [["5k", "5k"], ["Bronco (1.2k)", "bronco"]], { selected: "5k" }, { id: "race_type_select" } %>
+  </div>
+  <div>
     <%= form.label :date %><br>
     <%= form.date_field :date, value: Date.current %>
   </div>
   <div>
-    <%= form.label :time, "Time (mm:ss)" %><br>
-    <%= form.text_field :time, placeholder: "e.g. 25:30" %>
+    <%= form.label :time, "Time", id: "time_label" %><br>
+    <%= form.text_field :time, placeholder: "e.g. 25:30", id: "time_input" %>
+    <small id="time_help">Format: mm:ss for 5k, m:ss for Bronco</small>
   </div>
   <div class="btn-group">
     <%= form.submit "Add Run", class: "btn" %>
     <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
   </div>
 <% end %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const raceTypeSelect = document.getElementById('race_type_select');
+  const timeInput = document.getElementById('time_input');
+  const timeHelp = document.getElementById('time_help');
+
+  function updatePlaceholder() {
+    if (raceTypeSelect.value === 'bronco') {
+      timeInput.placeholder = 'e.g. 5:30';
+      timeHelp.textContent = 'Format: m:ss for Bronco';
+    } else {
+      timeInput.placeholder = 'e.g. 25:30';
+      timeHelp.textContent = 'Format: mm:ss for 5k';
+    }
+  }
+
+  raceTypeSelect.addEventListener('change', updatePlaceholder);
+  updatePlaceholder();
+});
+</script>

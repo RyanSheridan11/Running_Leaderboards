@@ -13,6 +13,17 @@ class UsersController < ApplicationController
     end
   end
 
+  def show
+    @user = User.find(params[:id])
+    @runs = @user.runs.order(created_at: :desc)
+  end
+
+  def profile
+    redirect_to login_path unless logged_in?
+    @user = current_user
+    @runs = @user.runs.order(created_at: :desc)
+  end
+
   private
 
   def user_params

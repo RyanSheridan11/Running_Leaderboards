@@ -32,3 +32,12 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Production deployment files
+.env.production
+/deploy/logs/*
+/backup-*.tar.gz
+
+# Docker volumes
+/production-storage/*
+/production-logs/*

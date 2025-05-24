@@ -1,0 +1,238 @@
+<div class="deadline-header">
+  <h1><%= @race_deadline.race_type.upcase %> Deadline Submissions</h1>
+  <div class="deadline-info">
+    <div class="info-card">
+      <h3>Due Date</h3>
+      <p><%= @race_deadline.due_date.strftime("%B %d, %Y") %></p>
+      <% if @race_deadline.overdue? %>
+        <span class="status-badge overdue"><%= @race_deadline.days_remaining.abs %> days overdue</span>
+      <% else %>
+        <span class="status-badge active"><%= @race_deadline.days_remaining %> days remaining</span>
+      <% end %>
+    </div>
+
+    <% if @race_deadline.description.present? %>
+      <div class="info-card">
+        <h3>Description</h3>
+        <p><%= @race_deadline.description %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="submission-stats">
+  <div class="stat-card submitted">
+    <h3><%= @users_with_submissions.count %></h3>
+    <p>Users Submitted</p>
+  </div>
+
+  <div class="stat-card pending">
+    <h3><%= @users_without_submissions.count %></h3>
+    <p>Users Pending</p>
+  </div>
+
+  <div class="stat-card total">
+    <h3><%= User.count %></h3>
+    <p>Total Users</p>
+  </div>
+</div>
+
+<div class="submissions-section">
+  <h2>Users Who Have Submitted</h2>
+
+  <% if @users_with_submissions.any? %>
+    <div class="table-container">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Best Time</th>
+            <th>Total Runs</th>
+            <th>Latest Run</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users_with_submissions.each do |user| %>
+            <% best_run = user.runs.where(race_type: @race_deadline.race_type).order(:time).first %>
+            <% latest_run = user.runs.where(race_type: @race_deadline.race_type).order(created_at: :desc).first %>
+            <tr>
+              <td><%= link_to user.username, user_path(user), class: "user-link" %></td>
+              <td><%= format_time(best_run.time, @race_deadline.race_type) if best_run %></td>
+              <td><%= user.runs.where(race_type: @race_deadline.race_type).count %></td>
+              <td><%= latest_run.created_at.strftime("%B %d, %Y") if latest_run %></td>
+              <td>
+                <%= link_to "View Profile", user_path(user), class: "btn btn-sm btn-outline-primary" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>No users have submitted times for this race type yet.</p>
+    </div>
+  <% end %>
+</div>
+
+<div class="pending-section">
+  <h2>Users Who Haven't Submitted</h2>
+
+  <% if @users_without_submissions.any? %>
+    <div class="table-container">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Member Since</th>
+            <th>Total Runs (All Types)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users_without_submissions.each do |user| %>
+            <tr>
+              <td><%= link_to user.username, user_path(user), class: "user-link" %></td>
+              <td><%= user.created_at.strftime("%B %d, %Y") %></td>
+              <td><%= user.runs.count %></td>
+              <td>
+                <%= link_to "View Profile", user_path(user), class: "btn btn-sm btn-outline-primary" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>All users have submitted times for this race type!</p>
+    </div>
+  <% end %>
+</div>
+
+<div class="back-actions">
+  <%= link_to "← Back to Deadlines", admin_race_deadlines_path, class: "btn btn-secondary" %>
+  <%= link_to "Edit Deadline", edit_admin_race_deadline_path(@race_deadline), class: "btn btn-primary" %>
+</div>
+
+<style>
+  .deadline-header {
+    margin-bottom: 2rem;
+  }
+
+  .deadline-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .info-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .info-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary-color);
+    font-size: 1rem;
+  }
+
+  .info-card p {
+    margin: 0;
+    color: #333;
+  }
+
+  .submission-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .stat-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+  }
+
+  .stat-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .stat-card.submitted h3 {
+    color: #28a745;
+  }
+
+  .stat-card.pending h3 {
+    color: #ffc107;
+  }
+
+  .stat-card.total h3 {
+    color: var(--primary-color);
+  }
+
+  .submissions-section, .pending-section {
+    margin-bottom: 2rem;
+  }
+
+  .submissions-section h2, .pending-section h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    display: inline-block;
+  }
+
+  .status-badge.active {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .status-badge.overdue {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .user-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .user-link:hover {
+    text-decoration: underline;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+  }
+
+  .back-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+</style>

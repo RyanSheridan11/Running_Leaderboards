@@ -1,0 +1,56 @@
+name: Test and Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      sqlite:
+        image: nouchka/sqlite3:latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.4.4
+        bundler-cache: true
+
+    - name: Setup Database
+      run: |
+        cp config/database.yml.github config/database.yml
+        bundle exec rails db:create RAILS_ENV=test
+        bundle exec rails db:schema:load RAILS_ENV=test
+
+    - name: Run Tests
+      run: |
+        bundle exec rails test
+        bundle exec rails test:system
+
+    - name: Run Security Scan
+      run: |
+        bundle exec brakeman --no-pager
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: |
+        docker build -t running_leaderboard:${{ github.sha }} .
+        docker tag running_leaderboard:${{ github.sha }} running_leaderboard:latest
+
+    - name: Test Docker image
+      run: |
+        docker run --rm -e RAILS_ENV=production -e SECRET_KEY_BASE=test running_leaderboard:latest rails --version

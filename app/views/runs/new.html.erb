@@ -1,0 +1,24 @@
+<h1>Add a 5k Run</h1>
+
+<%= form_with model: @run, url: runs_path, local: true do |form| %>
+  <% if @run.errors.any? %>
+    <div class="errors">
+      <ul>
+        <% @run.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div>
+    <%= form.label :date %><br>
+    <%= form.date_field :date %>
+  </div>
+  <div>
+    <%= form.label :time, "Time (seconds)" %><br>
+    <%= form.number_field :time, min: 1 %>
+  </div>
+  <div>
+    <%= form.submit "Add Run" %>
+  </div>
+<% end %>

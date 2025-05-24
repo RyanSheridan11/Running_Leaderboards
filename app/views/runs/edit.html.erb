@@ -1,6 +1,6 @@
-<h1>Add a 5k Run</h1>
+<h1>Edit Run</h1>
 
-<%= form_with model: @run, url: runs_path, local: true do |form| %>
+<%= form_with model: @run, local: true do |form| %>
   <% if @run.errors.any? %>
     <div class="errors">
       <ul>
@@ -12,14 +12,14 @@
   <% end %>
   <div>
     <%= form.label :date %><br>
-    <%= form.date_field :date, value: Date.current %>
+    <%= form.date_field :date %>
   </div>
   <div>
     <%= form.label :time, "Time (mm:ss)" %><br>
-    <%= form.text_field :time, placeholder: "e.g. 25:30" %>
+    <%= form.text_field :time, placeholder: "e.g. 25:30", value: format_time(@run.time) %>
   </div>
   <div class="btn-group">
-    <%= form.submit "Add Run", class: "btn" %>
+    <%= form.submit "Update Run", class: "btn" %>
     <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
   </div>
 <% end %>

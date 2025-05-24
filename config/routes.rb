@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root "runs#index"
 
   resources :users, only: [:new, :create]
-  resources :runs, only: [:new, :create, :index]
+  resources :runs, only: [:new, :create, :index, :edit, :update, :destroy]
 
   get    "/login",  to: "sessions#new"
   post   "/login",  to: "sessions#create"

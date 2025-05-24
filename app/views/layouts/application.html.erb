@@ -23,6 +23,31 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="top-nav">
+      <div class="nav-container">
+        <%= link_to "5k Leaderboard", root_path, class: "nav-brand" %>
+        <div class="nav-links">
+          <% if logged_in? %>
+            <span class="nav-user">Hello, <%= current_user.username %>!</span>
+            <%= link_to "Add Run", new_run_path, class: "nav-link" %>
+            <%= link_to "Log out", logout_path, data: { turbo_method: :delete }, class: "nav-link" %>
+          <% else %>
+            <%= link_to "Log in", login_path, class: "nav-link" %>
+            <%= link_to "Sign up", new_user_path, class: "nav-link" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <% if notice %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert %>
+        <div class="alert alert-error"><%= alert %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
   </body>
 </html>

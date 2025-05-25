@@ -8,7 +8,7 @@ class CreateRaceDeadlines < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     add_index :race_deadlines, [:race_type, :active]
   end
 end

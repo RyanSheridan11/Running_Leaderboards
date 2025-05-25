@@ -30,12 +30,12 @@ fi
 # Send notification if either service is down (uncomment and configure)
 if [ "$APP_STATUS" = "FAIL" ] || [ "$WEBHOOK_STATUS" = "FAIL" ]; then
     echo "$(date): Services are down - App: $APP_STATUS, Webhook: $WEBHOOK_STATUS" >> $LOG_FILE
-    
+
     # Example Slack notification (configure your webhook URL)
     # curl -X POST -H 'Content-type: application/json' \
     #     --data "{\"text\":\"🚨 Running Leaderboard Alert: App=$APP_STATUS, Webhook=$WEBHOOK_STATUS\"}" \
     #     YOUR_SLACK_WEBHOOK_URL
-    
+
     # Example email notification (requires mailutils)
     # echo "Running Leaderboard services are down. App: $APP_STATUS, Webhook: $WEBHOOK_STATUS" | \
     #     mail -s "Running Leaderboard Alert" admin@yourdomain.com

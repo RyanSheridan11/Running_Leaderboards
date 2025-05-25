@@ -44,7 +44,7 @@ echo "👤 Setting up deploy user..."
 if ! id "deploy" &>/dev/null; then
     useradd -m -s /bin/bash deploy
     usermod -aG docker deploy
-    
+
     # Set up SSH for deploy user (optional)
     mkdir -p /home/deploy/.ssh
     chmod 700 /home/deploy/.ssh

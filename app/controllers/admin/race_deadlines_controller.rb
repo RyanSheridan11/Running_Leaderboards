@@ -18,7 +18,7 @@ class Admin::RaceDeadlinesController < ApplicationController
 
   def create
     @race_deadline = RaceDeadline.new(race_deadline_params)
-    
+
     if @race_deadline.save
       redirect_to admin_race_deadlines_path, notice: "Race deadline created successfully."
     else

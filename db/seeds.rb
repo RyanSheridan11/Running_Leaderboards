@@ -1,9 +1,68 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+# Create admin user if not exists
+admin = User.find_or_create_by!(username: "ryan") do |user|
+  user.password = "1234"
+  user.admin = true
+end
+
+admin = User.find_or_create_by!(username: "nick") do |user|
+  user.password = "1234"
+  user.admin = true
+end
+
+# Create regular user if not exists
+regular_user = User.find_or_create_by!(username: "testuser") do |user|
+  user.password = "password"
+  user.admin = false
+end
+
+# Create some test plays for approval workflow
+unless Play.exists?
+  # Pending plays
+  Play.create!(
+    title: "Havik D -> Callahan",
+    description: "Very sick play",
+    video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    user: regular_user,
+    status: "pending"
+  )
+  Play.create!(title: "Play 1", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 2", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 3", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 4", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 5", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 6", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 7", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 8", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 9", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 10", description: "Very sick play", user: regular_user)
+  Play.create!(title: "Play 11", description: "Very sick play", user: regular_user)
+
+  # Approved play
+  approved_play = Play.create!(
+    title: "Jimi does a regular throw",
+    description: "Test play already approved",
+    video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    user: admin,
+    status: "approved",
+    score: 0
+  )
+
+  # Rejected play
+  Play.create!(
+    title: "Basic Layup",
+    description: "rejected play for testing, and for wrong sport",
+    video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    user: regular_user,
+    status: "rejected"
+  )
+
+  puts "Created #{Play.count} test plays"
+end
+
+puts "Seed data created successfully!"
+puts "Admin user: username='ryan', password='1234'"
+puts "Regular user: username='testuser', password='password'"

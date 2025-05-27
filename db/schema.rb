@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_24_130017) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_27_065430) do
+  create_table "plays", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.string "video_url"
+    t.integer "user_id", null: false
+    t.integer "score", default: 0
+    t.string "status", default: "approved"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_plays_on_created_at"
+    t.index ["score"], name: "index_plays_on_score"
+    t.index ["status"], name: "index_plays_on_status"
+    t.index ["user_id"], name: "index_plays_on_user_id"
+  end
+
   create_table "race_deadlines", force: :cascade do |t|
     t.string "race_type", null: false
     t.date "due_date", null: false
@@ -39,5 +54,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_24_130017) do
     t.boolean "admin", default: false, null: false
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "play_id", null: false
+    t.integer "ranking", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["play_id"], name: "index_votes_on_play_id"
+    t.index ["user_id", "play_id"], name: "index_votes_on_user_id_and_play_id", unique: true
+    t.index ["user_id", "ranking"], name: "index_votes_on_user_id_and_ranking"
+    t.index ["user_id"], name: "index_votes_on_user_id"
+  end
+
+  add_foreign_key "plays", "users"
   add_foreign_key "runs", "users"
+  add_foreign_key "votes", "plays"
+  add_foreign_key "votes", "users"
 end

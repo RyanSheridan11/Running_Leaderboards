@@ -1,0 +1,60 @@
+<div class="form-container">
+  <h1>🎬 Submit New Play</h1>
+
+  <p class="form-description">
+    Share your best running moment! Submit a play that showcases great technique,
+    an amazing finish, or an inspiring moment. All submissions are reviewed before
+    being added to the voting pool.
+  </p>
+
+  <%= form_with model: @play, local: true, class: "play-form" do |form| %>
+    <% if @play.errors.any? %>
+      <div class="alert alert-error">
+        <h4><%= pluralize(@play.errors.count, "error") %> prohibited this play from being saved:</h4>
+        <ul>
+          <% @play.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :title, "Play Title*" %>
+      <%= form.text_field :title, placeholder: "e.g., Amazing comeback sprint finish",
+                         class: "form-control", maxlength: 100 %>
+      <small class="form-text">Give your play a catchy, descriptive title</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :description, "Description" %>
+      <%= form.text_area :description, rows: 4,
+                        placeholder: "Describe what makes this play special...",
+                        class: "form-control", maxlength: 500 %>
+      <small class="form-text">Optional: Add context about what happened (max 500 characters)</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :video_url, "YouTube Video URL" %>
+      <%= form.url_field :video_url,
+                        placeholder: "https://www.youtube.com/watch?v=...",
+                        class: "form-control" %>
+      <small class="form-text">
+        Optional: Link to a YouTube video of the play.
+        Supported formats: youtube.com/watch?v=... or youtu.be/...
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Submit Play", class: "btn btn-primary" %>
+      <%= link_to "Cancel", plays_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="submission-info">
+  <h3>📋 Submission Guidelines</h3>
+  <ul>
+    <li>Gotta be from a training camp</li>
+  </ul>
+</div>

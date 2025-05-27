@@ -3,6 +3,12 @@ Rails.application.routes.draw do
 
   resources :users, only: [:new, :create, :show]
   resources :runs, only: [:new, :create, :index, :edit, :update, :destroy]
+  resources :plays, only: [:index, :new, :create, :show]
+
+  # Voting routes
+  get "/vote", to: "votes#index"
+  post "/vote", to: "votes#update"
+  patch "/vote", to: "votes#update"
 
   get    "/login",  to: "sessions#new"
   post   "/login",  to: "sessions#create"
@@ -16,6 +22,12 @@ Rails.application.routes.draw do
     resources :runs, only: [:index, :destroy]
     resources :users, only: [:index]
     resources :race_deadlines
+    resources :plays, only: [:index, :show, :destroy] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

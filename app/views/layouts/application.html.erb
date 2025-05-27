@@ -27,6 +27,7 @@
       <div class="nav-container">
         <%= link_to "5k Leaderboard", root_path, class: "nav-brand" %>
         <div class="nav-links">
+          <%= link_to "Top 10 Plays", plays_path, class: "nav-link" %>
           <% if logged_in? %>
             <span class="nav-user">Hello, <%= current_user.username %>!</span>
             <%= link_to "Add Run", new_run_path, class: "nav-link" %>
@@ -38,6 +39,7 @@
                   <%= link_to "Manage Runs", admin_runs_path, class: "dropdown-item" %>
                   <%= link_to "Manage Users", admin_users_path, class: "dropdown-item" %>
                   <%= link_to "Manage Deadlines", admin_race_deadlines_path, class: "dropdown-item" %>
+                  <%= link_to "Manage Plays", admin_plays_path, class: "dropdown-item" %>
                 </div>
               </div>
             <% end %>

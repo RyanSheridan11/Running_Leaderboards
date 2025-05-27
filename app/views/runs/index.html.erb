@@ -36,40 +36,74 @@
   </table>
 </div>
 
-<h1>Bronco Board (1.2k)</h1>
+<div class="bronco-section">
+  <div class="bronco-leaderboard">
+    <h1>Bronco Board (1.2k)</h1>
 
-<div class="table-container">
-  <table class="leaderboard-table">
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Runner</th>
-        <th>Date</th>
-        <th>Time</th>
-        <% if logged_in? %>
-          <th>Actions</th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <% @bronco_runs.each_with_index do |run, index| %>
-        <tr>
-          <td><%= index + 1 %></td>
-          <td><%= link_to run.user.username, user_path(run.user), class: "user-link" %></td>
-          <td><%= run.date.strftime("%B %d, %Y") %></td>
-          <td><%= format_time(run.time, run.race_type) %></td>
-          <% if logged_in? %>
-            <td>
-              <% if current_user == run.user || admin? %>
-                <div class="table-actions">
-                  <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
-                  <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
-                </div>
+    <div class="table-container">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Runner</th>
+            <th>Date</th>
+            <th>Time</th>
+            <% if logged_in? %>
+              <th>Actions</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @bronco_runs.each_with_index do |run, index| %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= link_to run.user.username, user_path(run.user), class: "user-link" %></td>
+              <td><%= run.date.strftime("%B %d, %Y") %></td>
+              <td><%= format_time(run.time, run.race_type) %></td>
+              <% if logged_in? %>
+                <td>
+                  <% if current_user == run.user || admin? %>
+                    <div class="table-actions">
+                      <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
+                      <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
+                    </div>
+                  <% end %>
+                </td>
               <% end %>
-            </td>
+            </tr>
           <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tutorials-section">
+    <h2>📺 How to Bronco</h2>
+
+    <div class="video-container">
+      <h3>How to Setup the Bronco</h3>
+      <iframe
+        width="400"
+        height="225"
+        src="https://www.youtube.com/embed/R4cBuW3TrD0"
+        title="Bronco Setup Tutorial"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="video-container">
+      <h3>How to run the bronco</h3>
+      <iframe
+        width="400"
+        height="225"
+        src="https://www.youtube.com/embed/EfuPPV_A9V4"
+        title="Bronco Run Tutorial"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
 </div>

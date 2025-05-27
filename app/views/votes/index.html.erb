@@ -1,0 +1,240 @@
+<div class="voting-header">
+  <h1>🗳️ Vote for Top 10 Plays</h1>
+  <p class="voting-instructions">
+    Drag plays to rank them from best (#1) to #10. Your rankings help determine the official Top 10 leaderboard.
+  </p>
+</div>
+
+<div class="voting-container">
+  <div class="voting-sidebar">
+    <h3>📋 Available Plays</h3>
+    <div class="available-plays" id="available-plays">
+      <% @approved_plays.each do |play| %>
+        <% unless @user_votes[play.id] %>
+          <div class="vote-play-card" data-play-id="<%= play.id %>" draggable="true">
+            <div class="play-info">
+              <h4><%= play.title %></h4>
+              <p class="play-author">by <%= play.user.username %></p>
+              <% if play.video_url.present? && play.youtube_embed_url %>
+                <div class="play-thumbnail">
+                  <iframe
+                    width="200"
+                    height="113"
+                    src="<%= play.youtube_embed_url %>"
+                    title="<%= play.title %>"
+                    frameborder="0"
+                    allowfullscreen>
+                  </iframe>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="voting-main">
+    <h3>🏆 Your Top 10 Rankings</h3>
+    <div class="rankings-container" id="rankings-container">
+      <% (1..10).each do |rank| %>
+        <div class="ranking-slot" data-rank="<%= rank %>">
+          <div class="rank-number">#<%= rank %></div>
+          <div class="rank-content" id="rank-<%= rank %>">
+            <% if (user_vote = @user_votes.values.find { |v| v.ranking == rank }) %>
+              <div class="vote-play-card" data-play-id="<%= user_vote.play.id %>" draggable="true">
+                <div class="play-info">
+                  <h4><%= user_vote.play.title %></h4>
+                  <p class="play-author">by <%= user_vote.play.user.username %></p>
+                  <% if user_vote.play.video_url.present? && user_vote.play.youtube_embed_url %>
+                    <div class="play-thumbnail">
+                      <iframe
+                        width="200"
+                        height="113"
+                        src="<%= user_vote.play.youtube_embed_url %>"
+                        title="<%= user_vote.play.title %>"
+                        frameborder="0"
+                        allowfullscreen>
+                      </iframe>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% else %>
+              <div class="empty-slot">
+                <span>Drop a play here</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="voting-actions">
+      <button id="save-votes" class="btn btn-primary">Save My Rankings</button>
+      <button id="clear-votes" class="btn btn-secondary">Clear All</button>
+      <%= link_to "Back to Leaderboard", plays_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+</div>
+
+<div id="voting-feedback" class="voting-feedback" style="display: none;"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const playCards = document.querySelectorAll('.vote-play-card');
+  const rankingSlots = document.querySelectorAll('.rank-content');
+  const availablePlays = document.getElementById('available-plays');
+  const saveButton = document.getElementById('save-votes');
+  const clearButton = document.getElementById('clear-votes');
+  const feedback = document.getElementById('voting-feedback');
+
+  // Add drag and drop event listeners
+  playCards.forEach(card => {
+    card.addEventListener('dragstart', handleDragStart);
+    card.addEventListener('dragend', handleDragEnd);
+  });
+
+  rankingSlots.forEach(slot => {
+    slot.addEventListener('dragover', handleDragOver);
+    slot.addEventListener('drop', handleDrop);
+    slot.addEventListener('dragenter', handleDragEnter);
+    slot.addEventListener('dragleave', handleDragLeave);
+  });
+
+  availablePlays.addEventListener('dragover', handleDragOver);
+  availablePlays.addEventListener('drop', handleAvailableDrop);
+
+  let draggedElement = null;
+
+  function handleDragStart(e) {
+    draggedElement = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragEnd(e) {
+    this.classList.remove('dragging');
+    document.querySelectorAll('.drag-over').forEach(el => {
+      el.classList.remove('drag-over');
+    });
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleDragEnter(e) {
+    this.classList.add('drag-over');
+  }
+
+  function handleDragLeave(e) {
+    this.classList.remove('drag-over');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+
+    if (draggedElement && this !== draggedElement.parentNode) {
+      // Remove any existing empty slot
+      const emptySlot = this.querySelector('.empty-slot');
+      if (emptySlot) {
+        emptySlot.remove();
+      }
+
+      // If there's already a card here, move it back to available
+      const existingCard = this.querySelector('.vote-play-card');
+      if (existingCard && existingCard !== draggedElement) {
+        availablePlays.appendChild(existingCard);
+      }
+
+      // Move the dragged card here
+      this.appendChild(draggedElement);
+    }
+  }
+
+  function handleAvailableDrop(e) {
+    e.preventDefault();
+
+    if (draggedElement && draggedElement.parentNode !== availablePlays) {
+      // Add empty slot back to the ranking position
+      const rankContent = draggedElement.parentNode;
+      if (rankContent.classList.contains('rank-content')) {
+        const emptySlot = document.createElement('div');
+        emptySlot.className = 'empty-slot';
+        emptySlot.innerHTML = '<span>Drop a play here</span>';
+        rankContent.appendChild(emptySlot);
+      }
+
+      // Move card back to available plays
+      availablePlays.appendChild(draggedElement);
+    }
+  }
+
+  // Save votes
+  saveButton.addEventListener('click', function() {
+    const votes = [];
+
+    rankingSlots.forEach(slot => {
+      const card = slot.querySelector('.vote-play-card');
+      if (card) {
+        votes.push(card.dataset.playId);
+      }
+    });
+
+    if (votes.length === 0) {
+      showFeedback('Please rank at least one play before saving.', 'error');
+      return;
+    }
+
+    // Send votes to server
+    fetch('/vote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ votes: votes })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        showFeedback(data.message, 'success');
+      } else {
+        showFeedback(data.message, 'error');
+      }
+    })
+    .catch(error => {
+      showFeedback('Error saving votes. Please try again.', 'error');
+    });
+  });
+
+  // Clear all votes
+  clearButton.addEventListener('click', function() {
+    rankingSlots.forEach(slot => {
+      const card = slot.querySelector('.vote-play-card');
+      if (card) {
+        availablePlays.appendChild(card);
+
+        const emptySlot = document.createElement('div');
+        emptySlot.className = 'empty-slot';
+        emptySlot.innerHTML = '<span>Drop a play here</span>';
+        slot.appendChild(emptySlot);
+      }
+    });
+    showFeedback('All rankings cleared.', 'info');
+  });
+
+  function showFeedback(message, type) {
+    feedback.textContent = message;
+    feedback.className = `voting-feedback alert-${type}`;
+    feedback.style.display = 'block';
+
+    setTimeout(() => {
+      feedback.style.display = 'none';
+    }, 5000);
+  }
+});
+</script>

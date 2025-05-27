@@ -1,0 +1,414 @@
+<% content_for :title, "Manage Plays" %>
+
+<div class="admin-header">
+  <h1>Manage Plays</h1>
+  <%= link_to "← Back to Admin", admin_runs_path, class: "btn btn-secondary" %>
+</div>
+
+<div class="play-management-tabs">
+  <div class="tab-buttons">
+    <button class="tab-btn active" data-tab="pending">Pending (<%= @pending_plays.count %>)</button>
+    <button class="tab-btn" data-tab="approved">Approved (<%= @approved_plays.count %>)</button>
+    <button class="tab-btn" data-tab="rejected">Rejected (<%= @rejected_plays.count %>)</button>
+  </div>
+
+  <!-- Pending Plays Tab -->
+  <div id="pending-tab" class="tab-content active">
+    <h2>Pending Plays</h2>
+    <% if @pending_plays.any? %>
+      <div class="plays-grid">
+        <% @pending_plays.each do |play| %>
+          <div class="play-card pending">
+            <div class="play-header">
+              <h3><%= play.title %></h3>
+              <span class="status-badge pending">Pending</span>
+            </div>
+
+            <div class="play-content">
+              <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Date:</strong> <%= play.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+              <p><strong>Description:</strong></p>
+              <p class="description"><%= simple_format(play.description) %></p>
+
+              <div class="youtube-preview">
+                <% if play.video_url.present? %>
+                  <iframe
+                    src="https://www.youtube.com/embed/<%= play.youtube_video_id %>"
+                    frameborder="0"
+                    allowfullscreen>
+                  </iframe>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="play-actions">
+              <%= button_to "Approve", approve_admin_play_path(play),
+                          method: :patch,
+                          class: "btn btn-success",
+                          data: { confirm: "Are you sure you want to approve this play?" } %>
+              <%= button_to "Reject", reject_admin_play_path(play),
+                          method: :patch,
+                          class: "btn btn-warning",
+                          data: { confirm: "Are you sure you want to reject this play?" } %>
+              <%= button_to "Delete", admin_play_path(play),
+                          method: :delete,
+                          class: "btn btn-danger",
+                          data: { confirm: "Are you sure you want to permanently delete this play?" } %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>No pending plays to review.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Approved Plays Tab -->
+  <div id="approved-tab" class="tab-content">
+    <h2>Approved Plays</h2>
+    <% if @approved_plays.any? %>
+      <div class="plays-grid">
+        <% @approved_plays.each do |play| %>
+          <div class="play-card approved">
+            <div class="play-header">
+              <h3><%= play.title %></h3>
+              <span class="status-badge approved">Approved</span>
+            </div>
+
+            <div class="play-content">
+              <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Score:</strong> <%= play.score %> points</p>
+              <p><strong>Approved:</strong> <%= play.updated_at.strftime("%B %d, %Y") %></p>
+
+              <div class="youtube-preview">
+                <% if play.video_url.present? %>
+                  <iframe
+                    src="https://www.youtube.com/embed/<%= play.youtube_video_id %>"
+                    frameborder="0"
+                    allowfullscreen>
+                  </iframe>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="play-actions">
+              <%= link_to "Reject", reject_admin_play_path(play),
+                          method: :patch,
+                          class: "btn btn-warning",
+                          data: { confirm: "Move this play back to rejected?" } %>
+              <%= link_to "Delete", admin_play_path(play),
+                          method: :delete,
+                          class: "btn btn-danger",
+                          data: { confirm: "Are you sure you want to permanently delete this play?" } %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>No approved plays yet.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Rejected Plays Tab -->
+  <div id="rejected-tab" class="tab-content">
+    <h2>Rejected Plays</h2>
+    <% if @rejected_plays.any? %>
+      <div class="plays-grid">
+        <% @rejected_plays.each do |play| %>
+          <div class="play-card rejected">
+            <div class="play-header">
+              <h3><%= play.title %></h3>
+              <span class="status-badge rejected">Rejected</span>
+            </div>
+
+            <div class="play-content">
+              <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Rejected:</strong> <%= play.updated_at.strftime("%B %d, %Y") %></p>
+
+              <div class="youtube-preview">
+                <% if play.video_url.present? %>
+                  <iframe
+                    src="https://www.youtube.com/embed/<%= play.youtube_video_id %>"
+                    frameborder="0"
+                    allowfullscreen>
+                  </iframe>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="play-actions">
+              <%= link_to "Approve", approve_admin_play_path(play),
+                          method: :patch,
+                          class: "btn btn-success",
+                          data: { confirm: "Approve this play?" } %>
+              <%= link_to "Delete", admin_play_path(play),
+                          method: :delete,
+                          class: "btn btn-danger",
+                          data: { confirm: "Are you sure you want to permanently delete this play?" } %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>No rejected plays.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  function initAdminTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.onclick = () => {
+        const targetTab = button.dataset.tab;
+        tabButtons.forEach(btn => btn.classList.toggle('active', btn === button));
+        tabContents.forEach(content => content.classList.toggle('active', content.id === `${targetTab}-tab`));
+      };
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initAdminTabs);
+  document.addEventListener('turbo:load', initAdminTabs);
+</script>
+
+<style>
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #ddd;
+  }
+
+  .play-management-tabs {
+    margin-top: 1rem;
+  }
+
+  .tab-buttons {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 2rem;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    font-size: 1rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .tab-btn.active {
+    border-bottom-color: #007bff;
+    color: #007bff;
+    font-weight: bold;
+  }
+
+  .tab-btn:hover {
+    background-color: #f8f9fa;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .plays-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .play-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .play-card.pending {
+    border-left: 4px solid #ffc107;
+  }
+
+  .play-card.approved {
+    border-left: 4px solid #28a745;
+  }
+
+  .play-card.rejected {
+    border-left: 4px solid #dc3545;
+  }
+
+  .play-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .play-header h3 {
+    margin: 0;
+    color: #333;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .status-badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .status-badge.approved {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .status-badge.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .play-content p {
+    margin: 0.5rem 0;
+  }
+
+  .description {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 3px solid #007bff;
+    margin: 1rem 0;
+  }
+
+  .youtube-preview {
+    margin: 1rem 0;
+  }
+
+  .youtube-preview iframe {
+    width: 100%;
+    height: 200px;
+    border-radius: 4px;
+  }
+
+  .play-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  .play-actions form {
+    display: inline-block;
+    margin: 0;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+  }
+
+  .btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .btn-warning:hover {
+    background-color: #e0a800;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .plays-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tab-buttons {
+      flex-direction: column;
+    }
+
+    .tab-btn {
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      border-right: 3px solid transparent;
+    }
+
+    .tab-btn.active {
+      border-bottom-color: #ddd;
+      border-right-color: #007bff;
+    }
+
+    .play-actions {
+      flex-direction: column;
+    }
+
+    .admin-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+</style>

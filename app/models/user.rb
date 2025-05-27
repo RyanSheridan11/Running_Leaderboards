@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
   has_many :runs, dependent: :destroy
+  has_many :plays, dependent: :destroy
+  has_many :votes, dependent: :destroy
   validates :username, presence: true, uniqueness: true
 
   before_create :set_first_user_as_admin
@@ -11,6 +13,10 @@ class User < ApplicationRecord
 
   def bronco_runs
     runs.bronco.order(:time)
+  end
+
+  def voted_plays
+    votes.includes(:play).map(&:play)
   end
 
   private

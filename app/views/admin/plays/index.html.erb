@@ -94,11 +94,11 @@
             </div>
 
             <div class="play-actions">
-              <%= link_to "Reject", reject_admin_play_path(play),
+              <%= button_to "Reject", reject_admin_play_path(play),
                           method: :patch,
                           class: "btn btn-warning",
                           data: { confirm: "Move this play back to rejected?" } %>
-              <%= link_to "Delete", admin_play_path(play),
+              <%= button_to "Delete", admin_play_path(play),
                           method: :delete,
                           class: "btn btn-danger",
                           data: { confirm: "Are you sure you want to permanently delete this play?" } %>
@@ -141,11 +141,11 @@
             </div>
 
             <div class="play-actions">
-              <%= link_to "Approve", approve_admin_play_path(play),
+              <%= button_to "Approve", approve_admin_play_path(play),
                           method: :patch,
                           class: "btn btn-success",
                           data: { confirm: "Approve this play?" } %>
-              <%= link_to "Delete", admin_play_path(play),
+              <%= button_to "Delete", admin_play_path(play),
                           method: :delete,
                           class: "btn btn-danger",
                           data: { confirm: "Are you sure you want to permanently delete this play?" } %>

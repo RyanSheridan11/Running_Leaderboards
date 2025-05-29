@@ -12,6 +12,8 @@ module Admin
     # GET /race_deadlines/1
     # GET /race_deadlines/1.json
     def show
+      @users_with_submissions = @race_deadline.users_with_submissions
+      @users_without_submissions = @race_deadline.users_without_submissions
     end
 
     # GET /race_deadlines/new

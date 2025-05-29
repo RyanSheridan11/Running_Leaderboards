@@ -6,6 +6,12 @@ class RunsController < ApplicationController
   def index
     @five_k_runs = Run.five_k.includes(:user).order(:time)
     @bronco_runs = Run.bronco.includes(:user).order(:time)
+    # Only each user's personal best (first ordered by time), limit to top 10
+    @unique_5k_runs = @five_k_runs.uniq(&:user_id).first(10)
+    # Only each user's personal best for bronco, limit to top 10
+    @unique_bronco_runs = @bronco_runs.uniq(&:user_id).first(10)
+    @top_plays = Play.approved.top_rated.limit(10)
+    @current_deadlines = RaceDeadline.active.where("start_date <= ? AND due_date >= ?", Date.current, Date.current)
   end
 
   def new
@@ -74,6 +80,10 @@ class RunsController < ApplicationController
   def destroy
     @run.destroy
     redirect_to root_path, notice: "Run deleted!"
+  end
+
+  # GET /bronco_tutorials
+  def bronco_tutorials
   end
 
   private

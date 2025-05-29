@@ -1,6 +1,7 @@
 class RaceDeadline < ApplicationRecord
   validates :race_type, presence: true, inclusion: { in: %w[5k bronco] }
   validates :due_date, presence: true
+  validates :start_date, presence: true
 
   scope :active, -> { where(active: true) }
   scope :for_race_type, ->(type) { where(race_type: type) }

@@ -12,6 +12,7 @@
     <thead>
       <tr>
         <th>Race Type</th>
+        <th>Start Date</th>
         <th>Due Date</th>
         <th>Status</th>
         <th>Days Remaining</th>
@@ -28,6 +29,7 @@
               <%= deadline.race_type.upcase %>
             </span>
           </td>
+          <td><%= deadline.start_date.present? ? deadline.start_date.strftime("%B %d, %Y") : '-' %></td>
           <td><%= deadline.due_date.strftime("%B %d, %Y") %></td>
           <td>
             <% if deadline.active? %>

@@ -2,6 +2,10 @@
   <h1><%= @race_deadline.race_type.upcase %> Deadline Submissions</h1>
   <div class="deadline-info">
     <div class="info-card">
+      <h3>Start Date</h3>
+      <p><%= @race_deadline.start_date.strftime("%B %d, %Y") %></p>
+    </div>
+    <div class="info-card">
       <h3>Due Date</h3>
       <p><%= @race_deadline.due_date.strftime("%B %d, %Y") %></p>
       <% if @race_deadline.overdue? %>

@@ -25,9 +25,10 @@
   <body>
     <nav class="top-nav">
       <div class="nav-container">
-        <%= link_to "5k Leaderboard", root_path, class: "nav-brand" %>
+        <%= link_to "Katipo Leaderboards", root_path, class: "nav-brand" %>
+        <%= link_to "Top 10 Plays", plays_path, class: "nav-link" %>
         <div class="nav-links">
-          <%= link_to "Top 10 Plays", plays_path, class: "nav-link" %>
+
           <% if logged_in? %>
             <span class="nav-user">Hello, <%= current_user.username %>!</span>
             <%= link_to "Add Run", new_run_path, class: "nav-link" %>

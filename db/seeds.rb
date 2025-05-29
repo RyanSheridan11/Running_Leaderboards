@@ -63,6 +63,45 @@ unless Play.exists?
   puts "Created #{Play.count} test plays"
 end
 
+# Create additional users and random run data
+names = [
+  'Darren Leishman', 'James Bowen', 'Ben Coubrough', 'Harry Coubrough',
+  'Michael James', 'Troy Craddock', 'Finlay Armstrong', 'Andy Huang',
+  'Cooper McCone', 'Alex Dewhurst', 'Gatsby Cohen'
+]
+
+names.each do |full_name|
+  username = full_name.parameterize(separator: '_')
+  user = User.find_or_create_by!(username: username) do |u|
+    u.password = 'password'
+    u.admin    = false
+  end
+
+  # Skip if runs already exist for idempotency
+  next if user.runs.exists?
+
+  # Generate 3 random 5k runs (time between 20 and 30 minutes)
+  3.times do
+    Run.create!(
+      user: user,
+      race_type: '5k',
+      date: Date.today - rand(0..30),
+      time: rand(20*60..30*60)
+    )
+  end
+
+  # Generate 2 random Bronco runs (time between 90 and 150 seconds)
+  2.times do
+    Run.create!(
+      user: user,
+      race_type: 'bronco',
+      date: Date.today - rand(0..30),
+      time: rand(90..150)
+    )
+  end
+end
+
 puts "Seed data created successfully!"
 puts "Admin user: username='ryan', password='1234'"
 puts "Regular user: username='testuser', password='password'"
+puts "Created sample runs for users: #{names.join(', ')}"

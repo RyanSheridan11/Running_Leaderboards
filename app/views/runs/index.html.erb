@@ -1,109 +1,133 @@
-<h1>5k Leaderboard</h1>
+<% if @current_deadlines.any? %>
+  <div class="alert alert-info">
+    <% @current_deadlines.each do |deadline| %>
+      <p><strong><%= deadline.race_type.capitalize %> Deadline:</strong>
+         Submit by <%= deadline.due_date.strftime("%B %d, %Y") %>
+         (<%= deadline.days_remaining %> days remaining)</p>
+    <% end %>
+  </div>
+<% end %>
 
-<div class="table-container">
-  <table class="leaderboard-table">
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Runner</th>
-        <th>Date</th>
-        <th>Time</th>
-        <% if logged_in? %>
-          <th>Actions</th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <% @five_k_runs.each_with_index do |run, index| %>
+<div class="leaderboards-row" style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+  <div class="table-container" style="width:48%; display:inline-block; vertical-align: top;">
+    <h1>5k PB Leaderboard</h1>
+
+    <table class="leaderboard-table">
+      <thead>
         <tr>
-          <td><%= index + 1 %></td>
-          <td><%= link_to run.user.username, user_path(run.user), class: "user-link" %></td>
-          <td><%= run.date.strftime("%B %d, %Y") %></td>
-          <td><%= format_time(run.time, run.race_type) %></td>
+          <th>Rank</th>
+          <th>Runner</th>
+          <th>Date</th>
+          <th>Pace</th>
+          <th>Time</th>
           <% if logged_in? %>
-            <td>
-              <% if current_user == run.user || admin? %>
-                <div class="table-actions">
-                  <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
-                  <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
-                </div>
-              <% end %>
-            </td>
+            <th>Actions</th>
           <% end %>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
-<div class="bronco-section">
-  <div class="bronco-leaderboard">
-    <h1>Bronco Board (1.2k)</h1>
-
-    <div class="table-container">
-      <table class="leaderboard-table">
-        <thead>
+      </thead>
+      <tbody>
+    <% @unique_5k_runs.each_with_index do |run, index| %>
           <tr>
-            <th>Rank</th>
-            <th>Runner</th>
-            <th>Date</th>
-            <th>Time</th>
+            <td><%= index + 1 %></td>
+            <td>
+              <% name = index < 5 ? run.user.username : 'Anonymous' %>
+              <% if index < 5 && (admin? || run.user == current_user) %>
+                <%= link_to name, user_path(run.user), class: "user-link" %>
+              <% else %>
+                <%= name %>
+              <% end %>
+            </td>
+            <td><%= run.date.strftime("%B %d, %Y") %></td>
+            <td><%= format_pace(run.time, run.race_type) %></td>
+            <td><%= format_time(run.time, run.race_type) %></td>
             <% if logged_in? %>
-              <th>Actions</th>
+              <td>
+                <% if current_user == run.user || admin? %>
+                  <div class="table-actions">
+                    <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
+                    <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
+                  </div>
+        <% end %>
+              </td>
             <% end %>
           </tr>
-        </thead>
-        <tbody>
-          <% @bronco_runs.each_with_index do |run, index| %>
-            <tr>
-              <td><%= index + 1 %></td>
-              <td><%= link_to run.user.username, user_path(run.user), class: "user-link" %></td>
-              <td><%= run.date.strftime("%B %d, %Y") %></td>
-              <td><%= format_time(run.time, run.race_type) %></td>
-              <% if logged_in? %>
-                <td>
-                  <% if current_user == run.user || admin? %>
-                    <div class="table-actions">
-                      <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
-                      <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
-                    </div>
-                  <% end %>
-                </td>
-              <% end %>
-            </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p>Top 5 are public, next 5 are anonymous times. Then the next 30 are working on getting onto the leaderboard</p>
+  </div>
+
+  <div class="table-container" style="width:48%; display:inline-block; vertical-align: top;">
+    <h1>Bronco Board (1.2k)</h1>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Runner</th>
+          <th>Date</th>
+          <th>Pace</th>
+          <th>Time</th>
+          <% if logged_in? %>
+            <th>Actions</th>
           <% end %>
-        </tbody>
-      </table>
+        </tr>
+      </thead>
+      <tbody>
+        <% @unique_bronco_runs.each_with_index do |run, index| %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td>
+              <% name = run.user.username %>
+              <% if admin? || run.user == current_user %>
+                <%= link_to name, user_path(run.user), class: "user-link" %>
+              <% else %>
+                <%= name %>
+              <% end %>
+            </td>
+            <td><%= run.date.strftime("%B %d, %Y") %></td>
+            <td><%= format_pace(run.time, run.race_type) %></td>
+            <td><%= format_time(run.time, run.race_type) %></td>
+            <% if logged_in? %>
+              <td>
+                <% if current_user == run.user || admin? %>
+                  <div class="table-actions">
+                    <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
+                    <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
+                  </div>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="tutorials-link" style="margin-top:1rem;">
+      <%= link_to 'View Bronco Tutorials', bronco_tutorials_path, class: 'btn btn-outline-primary' %>
     </div>
   </div>
 
-  <div class="tutorials-section">
-    <h2>📺 How to Bronco</h2>
 
-    <div class="video-container">
-      <h3>How to Setup the Bronco</h3>
-      <iframe
-        width="400"
-        height="225"
-        src="https://www.youtube.com/embed/R4cBuW3TrD0"
-        title="Bronco Setup Tutorial"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    <div class="video-container">
-      <h3>How to run the bronco</h3>
-      <iframe
-        width="400"
-        height="225"
-        src="https://www.youtube.com/embed/EfuPPV_A9V4"
-        title="Bronco Run Tutorial"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
 </div>
+
+<h2>🏆 Top 10 Plays</h2>
+<% if @top_plays.any? %>
+  <div class="plays-leaderboard runs-leading">
+    <% @top_plays.each_with_index do |play, index| %>
+      <div class="play-card rank-<%= index + 1 %>">
+        <div class="play-rank">
+          <span class="rank-number">#<%= index + 1 %></span>
+          <span class="play-score"><%= play.score %> pts</span>
+        </div>
+        <div class="play-content">
+          <h3><%= play.title %></h3>
+          <p>by <%= play.user.username %></p>
+          <% if play.youtube_embed_url %>
+            <iframe width="320" height="180" src="<%= play.youtube_embed_url %>" frameborder="0" allowfullscreen></iframe>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No plays yet. <%= link_to 'Submit a play', new_play_path %></p>
+<% end %>

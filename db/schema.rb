@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_27_065430) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_27_074607) do
   create_table "plays", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
@@ -33,6 +33,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_065430) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "start_date"
     t.index ["race_type", "active"], name: "index_race_deadlines_on_race_type_and_active"
   end
 

@@ -1,5 +1,6 @@
 class Play < ApplicationRecord
   belongs_to :user
+  belongs_to :event
   has_many :votes, dependent: :destroy
 
   validates :title, presence: true, length: { maximum: 100 }

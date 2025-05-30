@@ -105,3 +105,23 @@ puts "Seed data created successfully!"
 puts "Admin user: username='ryan', password='1234'"
 puts "Regular user: username='testuser', password='password'"
 puts "Created sample runs for users: #{names.join(', ')}"
+
+# Seed events
+events = [
+  { name: 'Youth Champs',   start_date: Date.new(2025,6,1), end_date: Date.new(2025,6,3) },
+  { name: 'Camp 1',         start_date: Date.new(2025,6,5), end_date: Date.new(2025,6,7) },
+  { name: 'Camp 2',         start_date: Date.new(2025,6,9), end_date: Date.new(2025,6,11) },
+  { name: 'Camp 3',         start_date: Date.new(2025,6,13), end_date: Date.new(2025,6,15) },
+  { name: 'Trans Tasman',   start_date: Date.new(2025,6,17), end_date: Date.new(2025,6,19) },
+  { name: 'Camp 4',         start_date: Date.new(2025,6,21), end_date: Date.new(2025,6,23) },
+  { name: 'Camp 5',         start_date: Date.new(2025,6,25), end_date: Date.new(2025,6,27) },
+  { name: 'Camp 6',         start_date: Date.new(2025,6,29), end_date: Date.new(2025,7,1) },
+  { name: 'World Champs',   start_date: Date.new(2025,7,3), end_date: Date.new(2025,7,5) }
+]
+events.each do |attrs|
+  Event.find_or_create_by!(name: attrs[:name]) do |e|
+    e.start_date = attrs[:start_date]
+    e.end_date   = attrs[:end_date]
+  end
+end
+puts "Seeded #{Event.count} events"

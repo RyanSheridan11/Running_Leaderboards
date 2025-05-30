@@ -20,13 +20,13 @@
           <th>Date</th>
           <th>Pace</th>
           <th>Time</th>
-          <% if logged_in? %>
+          <% if admin? %>
             <th>Actions</th>
           <% end %>
         </tr>
       </thead>
       <tbody>
-    <% @unique_5k_runs.each_with_index do |run, index| %>
+        <% @unique_5k_runs.each_with_index do |run, index| %>
           <tr>
             <td><%= index + 1 %></td>
             <td>
@@ -40,14 +40,12 @@
             <td><%= run.date.strftime("%B %d, %Y") %></td>
             <td><%= format_pace(run.time, run.race_type) %></td>
             <td><%= format_time(run.time, run.race_type) %></td>
-            <% if logged_in? %>
+            <% if admin? %>
               <td>
-                <% if current_user == run.user || admin? %>
-                  <div class="table-actions">
-                    <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
-                    <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
-                  </div>
-        <% end %>
+                <div class="table-actions">
+                  <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
+                  <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
+                </div>
               </td>
             <% end %>
           </tr>
@@ -67,7 +65,7 @@
           <th>Date</th>
           <th>Pace</th>
           <th>Time</th>
-          <% if logged_in? %>
+          <% if admin? %>
             <th>Actions</th>
           <% end %>
         </tr>
@@ -87,14 +85,12 @@
             <td><%= run.date.strftime("%B %d, %Y") %></td>
             <td><%= format_pace(run.time, run.race_type) %></td>
             <td><%= format_time(run.time, run.race_type) %></td>
-            <% if logged_in? %>
+            <% if admin? %>
               <td>
-                <% if current_user == run.user || admin? %>
-                  <div class="table-actions">
-                    <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
-                    <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
-                  </div>
-                <% end %>
+                <div class="table-actions">
+                  <%= link_to "Edit", edit_run_path(run), class: "btn btn-small btn-secondary" %>
+                  <%= link_to "Delete", run_path(run), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-small btn-danger" %>
+                </div>
               </td>
             <% end %>
           </tr>
@@ -105,8 +101,6 @@
       <%= link_to 'View Bronco Tutorials', bronco_tutorials_path, class: 'btn btn-outline-primary' %>
     </div>
   </div>
-
-
 </div>
 
 <h2>🏆 Top 10 Plays</h2>

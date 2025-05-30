@@ -3,11 +3,22 @@ class PlaysController < ApplicationController
   before_action :set_play, only: [:show]
 
   def index
-    @top_plays = Play.approved.top_rated.limit(10)
+    @events = Event.order(:start_date)
+    if params[:event_id].present?
+      @selected_event = Event.find_by(id: params[:event_id])
+      @top_plays = if @selected_event
+                     Play.approved.where(event: @selected_event).top_rated.limit(10)
+                   else
+                     Play.approved.top_rated.limit(10)
+                   end
+    else
+      @top_plays = Play.approved.top_rated.limit(10)
+    end
   end
 
   def new
     @play = current_user.plays.build
+    @events = Event.order(:start_date)
   end
 
   def create
@@ -31,7 +42,7 @@ class PlaysController < ApplicationController
   end
 
   def play_params
-    params.require(:play).permit(:title, :description, :video_url)
+    params.require(:play).permit(:title, :description, :video_url, :event_id)
   end
 
   def require_login

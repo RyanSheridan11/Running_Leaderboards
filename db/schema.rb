@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_27_074607) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_29_104405) do
+  create_table "events", force: :cascade do |t|
+    t.string "name"
+    t.date "start_date"
+    t.date "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "plays", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
@@ -20,7 +28,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_074607) do
     t.string "status", default: "approved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "event_id", default: 1, null: false
     t.index ["created_at"], name: "index_plays_on_created_at"
+    t.index ["event_id"], name: "index_plays_on_event_id"
     t.index ["score"], name: "index_plays_on_score"
     t.index ["status"], name: "index_plays_on_status"
     t.index ["user_id"], name: "index_plays_on_user_id"
@@ -67,6 +77,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_074607) do
     t.index ["user_id"], name: "index_votes_on_user_id"
   end
 
+  add_foreign_key "plays", "events"
   add_foreign_key "plays", "users"
   add_foreign_key "runs", "users"
   add_foreign_key "votes", "plays"

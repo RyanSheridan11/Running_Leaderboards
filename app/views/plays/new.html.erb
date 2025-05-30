@@ -35,6 +35,15 @@
     </div>
 
     <div class="form-group">
+      <%= form.label :event_id, "Event *" %>
+      <%= form.select :event_id,
+            options_from_collection_for_select(@events, :id, :name, @play.event_id),
+            { prompt: 'Select an Event' },
+            class: 'form-control' %>
+      <small class="form-text">Choose the event this play belongs to</small>
+    </div>
+
+    <div class="form-group">
       <%= form.label :video_url, "YouTube Video URL" %>
       <%= form.url_field :video_url,
                         placeholder: "https://www.youtube.com/watch?v=...",

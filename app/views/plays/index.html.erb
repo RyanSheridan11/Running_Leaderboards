@@ -1,5 +1,15 @@
 <div class="plays-header">
   <h1>🏆 Top 10 Plays</h1>
+  <%= form_with url: plays_path, method: :get, local: true, class: "event-filter-form" do |form| %>
+    <div class="form-group" style="display:inline-block; margin-left:1rem;">
+      <%= form.label :event_id, "Event:" %>
+      <%= form.select :event_id,
+            options_for_select(@events.map { |e| [e.name, e.id] }, (@selected_event&.id)),
+            { include_blank: 'All Events' },
+            class: 'form-control' %>
+    </div>
+    <%= form.submit "Filter", class: "btn btn-outline-primary btn-sm", style: 'margin-left:0.5rem;' %>
+  <% end %>
   <% if logged_in? %>
     <div class="plays-actions">
       <%= link_to "Submit New Play", new_play_path, class: "btn btn-primary" %>
@@ -20,6 +30,7 @@
 
           <div class="play-content">
             <h3 class="play-title"><%= play.title %></h3>
+            <p class="play-event"><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
             <p class="play-author">by <%= play.user.username %></p>
 
             <% if play.description.present? %>

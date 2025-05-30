@@ -26,6 +26,7 @@
 
             <div class="play-content">
               <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
               <p><strong>Date:</strong> <%= play.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
               <p><strong>Description:</strong></p>
               <p class="description"><%= simple_format(play.description) %></p>
@@ -79,6 +80,7 @@
 
             <div class="play-content">
               <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
               <p><strong>Score:</strong> <%= play.score %> points</p>
               <p><strong>Approved:</strong> <%= play.updated_at.strftime("%B %d, %Y") %></p>
 
@@ -127,6 +129,7 @@
 
             <div class="play-content">
               <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
               <p><strong>Rejected:</strong> <%= play.updated_at.strftime("%B %d, %Y") %></p>
 
               <div class="youtube-preview">

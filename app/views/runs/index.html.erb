@@ -8,7 +8,7 @@
   </div>
 <% end %>
 
-<div class="leaderboards-row" style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+<div class="leaderboards-row" style="gap: 2rem; ">
   <div class="table-container" style="width:48%; display:inline-block; vertical-align: top;">
     <h1>5k PB Leaderboard</h1>
 
@@ -30,8 +30,8 @@
           <tr>
             <td><%= index + 1 %></td>
             <td>
-              <% name = index < 5 ? run.user.username : 'Anonymous' %>
-              <% if index < 5 && (admin? || run.user == current_user) %>
+              <% name = run.user.username %>
+              <% if (admin? || run.user == current_user) %>
                 <%= link_to name, user_path(run.user), class: "user-link" %>
               <% else %>
                 <%= name %>
@@ -52,7 +52,6 @@
         <% end %>
       </tbody>
     </table>
-    <p>Top 5 are public, next 5 are anonymous times. Then the next 30 are working on getting onto the leaderboard</p>
   </div>
 
   <div class="table-container" style="width:48%; display:inline-block; vertical-align: top;">
@@ -97,45 +96,83 @@
         <% end %>
       </tbody>
     </table>
-    <div class="tutorials-link" style="margin-top:1rem;">
+    <div class="tutorials-link">
       <%= link_to 'View Bronco Tutorials', bronco_tutorials_path, class: 'btn btn-outline-primary' %>
     </div>
   </div>
 </div>
 
-<%= form_with url: runs_path, method: :get, local: true, class: "event-filter-form" do |form| %>
-  <div class="form-group" style="display:inline-block; margin-left:1rem;">
-    <%= form.label :event_id, "Event:" %>
-    <%= form.select :event_id,
-          options_for_select(@events.map { |e| [e.name, e.id] }, (@selected_event&.id)),
-          { include_blank: 'All Events' },
-          class: 'form-control' %>
-  </div>
-  <%= form.submit "Filter", class: "btn btn-outline-primary btn-sm", style: 'margin-left:0.5rem;' %>
-<% end %>
+<div class="filter-submit-row">
+  <%= form_with url: runs_path, method: :get, local: true, class: "event-filter-form" do |form| %>
+    <div class="form-group">
+      <%= form.label :event_id, "Event:" %>
+      <%= form.select :event_id,
+            options_for_select(@events.map { |e| [e.name, e.id] }, (@selected_event&.id)),
+            { include_blank: 'All Events' },
+            class: 'form-control' %>
+    </div>
+    <%= form.submit "Filter", class: "btn btn-outline-primary btn-sm" %>
+  <% end %>
 
-<% if @selected_event.present? %>
-  <h2>🏆 Top 10 Plays for Event: <% @selected_event.name %></h2>
-<% else %>
-  <h2>🏆 Top 10 Plays accross all events</h2>
-<% end %>
-<% if @top_plays.any? %>
+  <% if logged_in? %>
+    <div class="plays-actions">
+      <%= link_to "Submit New Play", new_play_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="runs-vote-row" style="display:flex; gap:2rem; align-items:flex-start;">
   <div class="plays-leaderboard runs-leading">
-    <% @top_plays.each_with_index do |play, index| %>
-      <div class="play-card rank-<%= index + 1 %>">
-        <div class="play-rank">
-          <span class="rank-number">#<%= index + 1 %></span>
+    <% if @selected_event.present? %>
+      <h2>🏆 Top 10 Plays for Event: <%= @selected_event.name %></h2>
+    <% else %>
+      <h2>🏆 Top 10 Plays across all events</h2>
+    <% end %>
+    <% if @top_plays.any? %>
+      <% @top_plays.each_with_index do |play, index| %>
+        <div class="play-card rank-<%= index + 1 %>">
+          <div class="play-rank">
+            <span class="rank-number">#<%= index + 1 %></span>
+          </div>
+          <div class="play-content">
+            <h3><%= play.title %></h3>
+            <p>by <%= play.user.username %></p>
+            <% if play.video_url.present? %>
+              <p><a href="<%= play.video_url %>" target="_blank" rel="noopener">Watch Video</a></p>
+            <% end %>
+          </div>
         </div>
-        <div class="play-content">
-          <h3><%= play.title %></h3>
-          <p>by <%= play.user.username %></p>
-          <% if play.youtube_embed_url %>
-            <iframe width="320" height="180" src="<%= play.youtube_embed_url %>" frameborder="0" allowfullscreen></iframe>
-          <% end %>
-        </div>
-      </div>
+      <% end %>
+    <% else %>
+      <p>No plays yet. <%= link_to 'Submit a play', new_play_path %></p>
     <% end %>
   </div>
-<% else %>
-  <p>No plays yet. <%= link_to 'Submit a play', new_play_path %></p>
-<% end %>
+
+  <div class="voting-container">
+    <div class="voting-header">
+        <h2>🗳️ Vote for Top Plays</h2>
+      </div>
+    <div class="votes-options" style="display:flex; gap:2rem;">
+      <% if @play_pair.size == 2 %>
+        <% @play_pair.each do |play| %>
+          <div class="play-option" style="padding:1rem; border:1px solid #ccc; border-radius:8px;">
+            <h4><%= play.title %></h4>
+            <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
+            <p><strong>By:</strong> <%= play.user.username %></p>
+            <p><strong>ELO:</strong> <%= play.elo %></p>
+            <% if play.video_url.present? %>
+              <p><a href="<%= play.video_url %>" target="_blank" rel="noopener">Watch Video</a></p>
+            <% end %>
+            <%= form_with url: run_vote_path, method: :create_vote, local: true do |f| %>
+              <%= hidden_field_tag :play_ids, @play_pair.map(&:id).join(",") %>
+              <%= hidden_field_tag :selected_play_id, play.id %>
+              <%= f.submit "Vote for this play", class: "btn btn-primary" %>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <p>No plays available for voting at this time.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

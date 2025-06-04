@@ -1,12 +1,6 @@
 <div class="form-container">
   <h1>🎬 Submit New Play</h1>
 
-  <p class="form-description">
-    Share your best running moment! Submit a play that showcases great technique,
-    an amazing finish, or an inspiring moment. All submissions are reviewed before
-    being added to the voting pool.
-  </p>
-
   <%= form_with model: @play, local: true, class: "play-form" do |form| %>
     <% if @play.errors.any? %>
       <div class="alert alert-error">
@@ -23,7 +17,7 @@
       <%= form.label :title, "Play Title*" %>
       <%= form.text_field :title, placeholder: "e.g., Amazing comeback sprint finish",
                          class: "form-control", maxlength: 100 %>
-      <small class="form-text">Give your play a catchy, descriptive title</small>
+      <small class="form-text">Give your play a descriptive title</small>
     </div>
 
     <div class="form-group">

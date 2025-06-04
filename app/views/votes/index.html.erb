@@ -1,39 +1,10 @@
-<div class="voting-header">
-  <h1>🗳️ Vote for Top Plays</h1>
-  <p class="voting-instructions">
-    Help determine the official Top Plays leaderboard by voting for your favorite plays.
-  </p>
-</div>
-
-<div class="event-filter" style="margin-bottom:1rem;">
-  <%= form_with url: vote_path, method: :get, local: true do |f| %>
-    <%= f.label :event_id, "Filter by Event:" %>
-    <%= f.select :event_id, options_for_select(@events.map { |e| [e.name, e.id] }, @selected_event_id), include_blank: "All Events", class: "form-select" %>
-    <%= f.submit "Filter", class: "btn btn-secondary" %>
-  <% end %>
-</div>
-
-<div class="voting-container head-to-head-voting" style="display:flex; gap:2rem;">
-  <% if @play_pair.size == 2 %>
-    <% @play_pair.each do |play| %>
-      <div class="play-option" style="flex:1; padding:1rem; border:1px solid #ccc; border-radius:8px;">
-        <h4><%= play.title %></h4>
-        <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
-        <p><strong>By:</strong> <%= play.user.username %></p>
-        <p><strong>ELO:</strong> <%= play.elo %></p>
-        <% if play.youtube_embed_url %>
-          <div class="play-video" style="margin:1rem 0;">
-            <iframe width="320" height="180" src="<%= play.youtube_embed_url %>" frameborder="0" allowfullscreen></iframe>
-          </div>
-        <% end %>
-        <%= form_with url: vote_path, method: :post, local: true do |f| %>
-          <%= hidden_field_tag :play_ids, @play_pair.map(&:id).join(",") %>
-          <%= hidden_field_tag :selected_play_id, play.id %>
-          <%= f.submit "Vote for this play", class: "btn btn-primary" %>
-        <% end %>
-      </div>
-    <% end %>
-  <% else %>
-    <p>No plays available for voting at this time.</p>
-  <% end %>
-</div>
+// ...existing code above play option iframe...
+-        <% if play.youtube_embed_url %>
+-          <div class="play-video" style="margin:1rem 0;">
+-            <iframe width="320" height="180" src="<%= play.youtube_embed_url %>" frameborder="0" allowfullscreen></iframe>
+-          </div>
+-        <% end %>
++        <% if play.video_url.present? %>
++          <p><a href="<%= play.video_url %>" target="_blank" rel="noopener">Watch Video</a></p>
++        <% end %>
+// ...existing code below...

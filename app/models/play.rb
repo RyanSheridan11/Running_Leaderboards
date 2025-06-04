@@ -33,7 +33,7 @@ class Play < ApplicationRecord
 
   # Update Elo ratings after a head-to-head match
   # winner: this play; loser: opponent play; k: rating adjustment factor
-  def update_elo_against(loser, k: 24)
+  def update_elo_against(loser, k: 50)
     winner_elo = self.elo
     loser_elo = loser.elo
 

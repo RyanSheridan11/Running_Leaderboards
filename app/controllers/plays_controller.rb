@@ -1,6 +1,6 @@
 class PlaysController < ApplicationController
-  before_action :require_login, only: [:new, :create]
-  before_action :get_play, only: [:show]
+  before_action :require_login, only: [ :new, :create ]
+  before_action :get_play, only: [ :show ]
 
   def index
     @events = Event.order(:start_date)
@@ -21,7 +21,7 @@ class PlaysController < ApplicationController
     @play = current_user.plays.build(play_params)
 
     if @play.save
-      redirect_to plays_path, notice: 'Play submitted successfully! It will be reviewed by an admin.'
+      redirect_to root_path, notice: "Play submitted successfully! It will be reviewed by an admin."
     else
       render :new, status: :unprocessable_entity
     end

@@ -1,15 +1,13 @@
 Rails.application.routes.draw do
   root "runs#index"
 
-  resources :users, only: [:new, :create, :show]
-  resources :runs, only: [:new, :create, :index, :edit, :update, :destroy]
-  get 'bronco_tutorials', to: 'runs#bronco_tutorials', as: 'bronco_tutorials'
-  resources :plays, only: [:index, :new, :create, :show]
+  resources :users, only: [ :new, :create, :show ]
+  resources :runs, only: [ :new, :create, :index, :edit, :update, :destroy ]
+  get "bronco_tutorials", to: "runs#bronco_tutorials", as: "bronco_tutorials"
+  resources :plays, only: [ :index, :new, :create, :show ]
 
   # Voting routes
-  get "/vote", to: "votes#index"
-  post "/vote", to: "votes#update"
-  patch "/vote", to: "votes#update"
+  post "/runs/vote", to: "runs#create_vote", as: :run_vote
 
   get    "/login",  to: "sessions#new"
   post   "/login",  to: "sessions#create"
@@ -20,10 +18,10 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
-    resources :runs, only: [:index, :destroy]
-    resources :users, only: [:index]
+    resources :runs, only: [ :index, :destroy ]
+    resources :users, only: [ :index ]
     resources :race_deadlines
-    resources :plays, only: [:index, :show, :destroy] do
+    resources :plays, only: [ :index, :show, :destroy ] do
       member do
         patch :approve
         patch :reject

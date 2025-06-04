@@ -3,12 +3,12 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 # Create admin user if not exists
-admin = User.find_or_create_by!(username: "ryan") do |user|
+User.find_or_create_by!(username: "ryan") do |user|
   user.password = "1234"
   user.admin = true
 end
 
-admin = User.find_or_create_by!(username: "nick") do |user|
+User.find_or_create_by!(username: "nick") do |user|
   user.password = "1234"
   user.admin = true
 end
@@ -41,24 +41,6 @@ unless Play.exists?
   Play.create!(title: "Play 10", description: "Very sick play", user: regular_user)
   Play.create!(title: "Play 11", description: "Very sick play", user: regular_user)
 
-  # Approved play
-  approved_play = Play.create!(
-    title: "Jimi does a regular throw",
-    description: "Test play already approved",
-    video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    user: admin,
-    status: "approved",
-    score: 0
-  )
-
-  # Rejected play
-  Play.create!(
-    title: "Basic Layup",
-    description: "rejected play for testing, and for wrong sport",
-    video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    user: regular_user,
-    status: "rejected"
-  )
 
   puts "Created #{Play.count} test plays"
 end
@@ -108,15 +90,15 @@ puts "Created sample runs for users: #{names.join(', ')}"
 
 # Seed events
 events = [
-  { name: 'Youth Champs',   start_date: Date.new(2025,6,1), end_date: Date.new(2025,6,3) },
-  { name: 'Camp 1',         start_date: Date.new(2025,6,5), end_date: Date.new(2025,6,7) },
-  { name: 'Camp 2',         start_date: Date.new(2025,6,9), end_date: Date.new(2025,6,11) },
-  { name: 'Camp 3',         start_date: Date.new(2025,6,13), end_date: Date.new(2025,6,15) },
-  { name: 'Trans Tasman',   start_date: Date.new(2025,6,17), end_date: Date.new(2025,6,19) },
-  { name: 'Camp 4',         start_date: Date.new(2025,6,21), end_date: Date.new(2025,6,23) },
-  { name: 'Camp 5',         start_date: Date.new(2025,6,25), end_date: Date.new(2025,6,27) },
-  { name: 'Camp 6',         start_date: Date.new(2025,6,29), end_date: Date.new(2025,7,1) },
-  { name: 'World Champs',   start_date: Date.new(2025,7,3), end_date: Date.new(2025,7,5) }
+  { name: 'Youth Champs',   start_date: Date.new(2025, 6, 1), end_date: Date.new(2025, 6, 3) },
+  { name: 'Camp 1',         start_date: Date.new(2025, 6, 5), end_date: Date.new(2025, 6, 7) },
+  { name: 'Camp 2',         start_date: Date.new(2025, 6, 9), end_date: Date.new(2025, 6, 11) },
+  { name: 'Camp 3',         start_date: Date.new(2025, 6, 13), end_date: Date.new(2025, 6, 15) },
+  { name: 'Trans Tasman',   start_date: Date.new(2025, 6, 17), end_date: Date.new(2025, 6, 19) },
+  { name: 'Camp 4',         start_date: Date.new(2025, 6, 21), end_date: Date.new(2025, 6, 23) },
+  { name: 'Camp 5',         start_date: Date.new(2025, 6, 25), end_date: Date.new(2025, 6, 27) },
+  { name: 'Camp 6',         start_date: Date.new(2025, 6, 29), end_date: Date.new(2025, 7, 1) },
+  { name: 'World Champs',   start_date: Date.new(2025, 7, 3), end_date: Date.new(2025, 7, 5) }
 ]
 events.each do |attrs|
   Event.find_or_create_by!(name: attrs[:name]) do |e|

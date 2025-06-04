@@ -460,13 +460,6 @@ h3 {
   margin-bottom: 0.5rem;
 }
 
-.play-score {
-  display: block;
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: 600;
-}
-
 .play-content {
   flex: 1;
 }

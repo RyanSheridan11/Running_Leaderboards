@@ -1,7 +1,7 @@
 class RunsController < ApplicationController
-  before_action :require_login, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_run, only: [:edit, :update, :destroy]
-  before_action :check_owner, only: [:edit, :update, :destroy]
+  before_action :require_login, only: [ :new, :create, :edit, :update, :destroy ]
+  before_action :set_run, only: [ :edit, :update, :destroy ]
+  before_action :check_owner, only: [ :edit, :update, :destroy ]
 
   def index
     @five_k_runs = Run.five_k.includes(:user).order(:time)
@@ -12,6 +12,13 @@ class RunsController < ApplicationController
     @unique_bronco_runs = @bronco_runs.uniq(&:user_id).first(10)
     @top_plays = Play.approved.top_rated.limit(10)
     @current_deadlines = RaceDeadline.active.where("start_date <= ? AND due_date >= ?", Date.current, Date.current)
+    @events = Event.order(:start_date)
+    if params[:event_id].present?
+      @selected_event = Event.find_by(id: params[:event_id])
+      @top_plays = Play.approved.where(event: @selected_event).top_rated.limit(10)
+    else
+      @top_plays = Play.approved.top_rated.limit(10)
+    end
   end
 
   def new
@@ -112,9 +119,9 @@ class RunsController < ApplicationController
         seconds = $2.to_i
 
         if minutes >= 60
-          return :invalid_minutes
+          :invalid_minutes
         elsif seconds >= 60
-          return :invalid_seconds
+          :invalid_seconds
         else
           (minutes * 60) + seconds
         end
@@ -127,9 +134,9 @@ class RunsController < ApplicationController
         seconds = $2.to_i
 
         if minutes >= 60
-          return :invalid_minutes
+          :invalid_minutes
         elsif seconds >= 60
-          return :invalid_seconds
+          :invalid_seconds
         else
           (minutes * 60) + seconds
         end

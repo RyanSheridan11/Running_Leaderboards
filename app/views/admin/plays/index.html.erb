@@ -81,7 +81,6 @@
             <div class="play-content">
               <p><strong>Submitted by:</strong> <%= play.user.username %></p>
               <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
-              <p><strong>Score:</strong> <%= play.score %> points</p>
               <p><strong>Approved:</strong> <%= play.updated_at.strftime("%B %d, %Y") %></p>
 
               <div class="youtube-preview">

@@ -1,6 +1,6 @@
 class Admin::PlaysController < ApplicationController
   before_action :require_admin
-  before_action :set_play, only: [:show, :approve, :reject, :destroy]
+  before_action :get_play, only: [:show, :approve, :reject, :destroy]
 
   def index
     @pending_plays = Play.where(status: 'pending').order(created_at: :desc)
@@ -28,11 +28,7 @@ class Admin::PlaysController < ApplicationController
 
   private
 
-  def set_play
+  def get_play
     @play = Play.find(params[:id])
-  end
-
-  def require_admin
-    redirect_to root_path unless current_user&.admin?
   end
 end

@@ -1,7 +1,6 @@
 class Play < ApplicationRecord
   belongs_to :user
   belongs_to :event
-  has_many :votes, dependent: :destroy
 
   validates :title, presence: true, length: { maximum: 100 }
   validates :description, length: { maximum: 500 }
@@ -11,18 +10,9 @@ class Play < ApplicationRecord
   }, allow_blank: true
   validates :status, inclusion: { in: %w[pending approved rejected] }
 
-  scope :approved, -> { where(status: 'approved') }
-  scope :pending, -> { where(status: 'pending') }
-  scope :top_rated, -> { approved.order(score: :desc) }
-
-  def calculate_score!
-    total_score = votes.sum do |vote|
-      # Higher ranking (lower number) = more points
-      # 1st place = 10 points, 2nd = 9 points, etc.
-      [11 - vote.ranking, 1].max
-    end
-    update!(score: total_score)
-  end
+  scope :approved, -> { where(status: "approved") }
+  scope :pending, -> { where(status: "pending") }
+  scope :top_rated, -> { where(status: "approved").order(elo: :desc) }
 
   def youtube_embed_url
     return nil if video_url.blank?
@@ -34,10 +24,28 @@ class Play < ApplicationRecord
   def youtube_video_id
     return nil if video_url.blank?
 
-    if video_url.include?('youtube.com/watch?v=')
-      video_url.split('v=')[1]&.split('&')[0]
-    elsif video_url.include?('youtu.be/')
-      video_url.split('youtu.be/')[1]&.split('?')[0]
+    if video_url.include?('youtube.com/watch?v=') # rubocop:disable Style/StringLiterals
+      video_url.split("v=")[1]&.split("&")[0]
+    elsif video_url.include?("youtu.be/")
+      video_url.split("youtu.be/")[1]&.split("?")[0]
     end
+  end
+
+  # Update Elo ratings after a head-to-head match
+  # winner: this play; loser: opponent play; k: rating adjustment factor
+  def update_elo_against(loser, k: 24)
+    winner_elo = self.elo
+    loser_elo = loser.elo
+
+    match = Elos::Match.new(k: k)
+    match.add_player(rating: loser_elo)
+    match.add_player(rating: winner_elo, winner: true)
+
+    new_loser_elo, new_winner_elo = match.updated_ratings
+    Play.transaction do
+      update!(elo: new_winner_elo)
+      loser.update!(elo: new_loser_elo)
+    end
+    "Updating Elo ratings: #{loser_elo} -> #{new_loser_elo}, #{winner_elo} -> #{new_winner_elo}"
   end
 end

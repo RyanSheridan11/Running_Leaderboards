@@ -25,7 +25,6 @@
         <div class="play-card rank-<%= index + 1 %>">
           <div class="play-rank">
             <span class="rank-number">#<%= index + 1 %></span>
-            <span class="play-score"><%= play.score %> pts</span>
           </div>
 
           <div class="play-content">
@@ -53,7 +52,7 @@
 
             <div class="play-meta">
               <span class="play-date">Submitted <%= play.created_at.strftime("%B %d, %Y") %></span>
-              <span class="play-votes"><%= play.votes.count %> votes</span>
+              <span class="play-votes"><%= play.elo %> elo</span>
             </div>
           </div>
         </div>

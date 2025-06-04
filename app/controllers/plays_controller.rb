@@ -1,16 +1,12 @@
 class PlaysController < ApplicationController
   before_action :require_login, only: [:new, :create]
-  before_action :set_play, only: [:show]
+  before_action :get_play, only: [:show]
 
   def index
     @events = Event.order(:start_date)
     if params[:event_id].present?
       @selected_event = Event.find_by(id: params[:event_id])
-      @top_plays = if @selected_event
-                     Play.approved.where(event: @selected_event).top_rated.limit(10)
-                   else
-                     Play.approved.top_rated.limit(10)
-                   end
+      @top_plays = Play.approved.where(event: @selected_event).top_rated.limit(10)
     else
       @top_plays = Play.approved.top_rated.limit(10)
     end
@@ -37,17 +33,11 @@ class PlaysController < ApplicationController
 
   private
 
-  def set_play
+  def get_play
     @play = Play.find(params[:id])
   end
 
   def play_params
     params.require(:play).permit(:title, :description, :video_url, :event_id)
-  end
-
-  def require_login
-    unless logged_in?
-      redirect_to login_path, alert: 'Please log in to submit a play.'
-    end
   end
 end

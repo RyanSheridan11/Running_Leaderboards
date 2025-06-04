@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_29_104405) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_31_121507) do
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.date "start_date"
@@ -24,14 +24,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_104405) do
     t.text "description"
     t.string "video_url"
     t.integer "user_id", null: false
-    t.integer "score", default: 0
     t.string "status", default: "approved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "event_id", default: 1, null: false
+    t.integer "elo", default: 1000, null: false
     t.index ["created_at"], name: "index_plays_on_created_at"
     t.index ["event_id"], name: "index_plays_on_event_id"
-    t.index ["score"], name: "index_plays_on_score"
     t.index ["status"], name: "index_plays_on_status"
     t.index ["user_id"], name: "index_plays_on_user_id"
   end
@@ -65,21 +64,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_104405) do
     t.boolean "admin", default: false, null: false
   end
 
-  create_table "votes", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "play_id", null: false
-    t.integer "ranking", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["play_id"], name: "index_votes_on_play_id"
-    t.index ["user_id", "play_id"], name: "index_votes_on_user_id_and_play_id", unique: true
-    t.index ["user_id", "ranking"], name: "index_votes_on_user_id_and_ranking"
-    t.index ["user_id"], name: "index_votes_on_user_id"
-  end
-
   add_foreign_key "plays", "events"
   add_foreign_key "plays", "users"
   add_foreign_key "runs", "users"
-  add_foreign_key "votes", "plays"
-  add_foreign_key "votes", "users"
 end

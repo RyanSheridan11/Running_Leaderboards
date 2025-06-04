@@ -19,6 +19,25 @@ regular_user = User.find_or_create_by!(username: "testuser") do |user|
   user.admin = false
 end
 
+# Seed events
+events = [
+  { name: 'Youth Champs',   start_date: Date.new(2025, 6, 1), end_date: Date.new(2025, 6, 3) },
+  { name: 'Camp 1',         start_date: Date.new(2025, 6, 5), end_date: Date.new(2025, 6, 7) },
+  { name: 'Camp 2',         start_date: Date.new(2025, 6, 9), end_date: Date.new(2025, 6, 11) },
+  { name: 'Camp 3',         start_date: Date.new(2025, 6, 13), end_date: Date.new(2025, 6, 15) },
+  { name: 'Trans Tasman',   start_date: Date.new(2025, 6, 17), end_date: Date.new(2025, 6, 19) },
+  { name: 'Camp 4',         start_date: Date.new(2025, 6, 21), end_date: Date.new(2025, 6, 23) },
+  { name: 'Camp 5',         start_date: Date.new(2025, 6, 25), end_date: Date.new(2025, 6, 27) },
+  { name: 'Camp 6',         start_date: Date.new(2025, 6, 29), end_date: Date.new(2025, 7, 1) },
+  { name: 'World Champs',   start_date: Date.new(2025, 7, 3), end_date: Date.new(2025, 7, 5) }
+]
+events.each do |attrs|
+  Event.find_or_create_by!(name: attrs[:name]) do |e|
+    e.start_date = attrs[:start_date]
+    e.end_date   = attrs[:end_date]
+  end
+end
+
 # Create some test plays for approval workflow
 unless Play.exists?
   # Pending plays
@@ -29,19 +48,6 @@ unless Play.exists?
     user: regular_user,
     status: "pending"
   )
-  Play.create!(title: "Play 1", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 2", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 3", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 4", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 5", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 6", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 7", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 8", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 9", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 10", description: "Very sick play", user: regular_user)
-  Play.create!(title: "Play 11", description: "Very sick play", user: regular_user)
-
-
   puts "Created #{Play.count} test plays"
 end
 
@@ -87,23 +93,4 @@ puts "Seed data created successfully!"
 puts "Admin user: username='ryan', password='1234'"
 puts "Regular user: username='testuser', password='password'"
 puts "Created sample runs for users: #{names.join(', ')}"
-
-# Seed events
-events = [
-  { name: 'Youth Champs',   start_date: Date.new(2025, 6, 1), end_date: Date.new(2025, 6, 3) },
-  { name: 'Camp 1',         start_date: Date.new(2025, 6, 5), end_date: Date.new(2025, 6, 7) },
-  { name: 'Camp 2',         start_date: Date.new(2025, 6, 9), end_date: Date.new(2025, 6, 11) },
-  { name: 'Camp 3',         start_date: Date.new(2025, 6, 13), end_date: Date.new(2025, 6, 15) },
-  { name: 'Trans Tasman',   start_date: Date.new(2025, 6, 17), end_date: Date.new(2025, 6, 19) },
-  { name: 'Camp 4',         start_date: Date.new(2025, 6, 21), end_date: Date.new(2025, 6, 23) },
-  { name: 'Camp 5',         start_date: Date.new(2025, 6, 25), end_date: Date.new(2025, 6, 27) },
-  { name: 'Camp 6',         start_date: Date.new(2025, 6, 29), end_date: Date.new(2025, 7, 1) },
-  { name: 'World Champs',   start_date: Date.new(2025, 7, 3), end_date: Date.new(2025, 7, 5) }
-]
-events.each do |attrs|
-  Event.find_or_create_by!(name: attrs[:name]) do |e|
-    e.start_date = attrs[:start_date]
-    e.end_date   = attrs[:end_date]
-  end
-end
 puts "Seeded #{Event.count} events"

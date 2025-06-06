@@ -30,7 +30,7 @@ class RunsController < ApplicationController
     @run = current_user.runs.build(run_params)
     race_type = params[:run][:race_type] || "5k"
     time_in_seconds = convert_time_to_seconds(params[:run][:time], race_type)
-
+    @run.source = "manual"
     if params[:run][:time].present?
       case time_in_seconds
       when nil

@@ -985,6 +985,288 @@ input[type="submit"]:hover {
   }
 }
 
+/* Runs page: filter and submit new play layout */
+.filter-submit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+}
+.filter-submit-row .event-filter-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+.filter-submit-row .event-filter-form .form-group {
+  margin: 0;
+}
+.filter-submit-row .plays-actions {
+  margin: 0;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+
+.btn-danger {
+  background: #dc3545;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+}
+
+.btn-small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.btn-outline-primary {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Table actions */
+.table-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+input[type="submit"] {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background: #0056b3;
+}
+
+/* CSS Variables */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+}
+
+/* User profile links */
+.user-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.user-link:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* Table styling improvements */
+.table-container {
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 0.5rem;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.leaderboard-table th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  padding: calc(1rem / 2);
+  border-bottom: 2px solid #dee2e6;
+}
+
+.leaderboard-table td {
+  padding: calc(0.75rem / 2) calc(1rem / 2);
+  border-bottom: 1px solid #dee2e6;
+}
+
+.leaderboard-table tr:hover {
+  background: #f8f9fa;
+}
+
+.leaderboard-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Bronco section with tutorials layout */
+.bronco-section {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
+.bronco-leaderboard {
+  flex: 1;
+  min-width: 500px;
+}
+
+.tutorials-section {
+  flex: 0 0 450px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+.tutorials-section h2 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+  font-size: 1.4rem;
+}
+
+.tutorials-link {
+  padding: 10px;
+}
+
+.video-container {
+  margin-bottom: 25px;
+}
+
+.video-container:last-child {
+  margin-bottom: 0;
+}
+
+.video-container h3 {
+  color: #555;
+  margin-bottom: 10px;
+  margin-top: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.video-container iframe {
+  width: 100%;
+  max-width: 400px;
+  height: 225px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: none;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1200px) {
+  .bronco-section {
+    flex-direction: column;
+  }
+
+  .bronco-leaderboard {
+    min-width: auto;
+  }
+
+  .tutorials-section {
+    flex: none;
+    max-width: none;
+  }
+
+  .video-container iframe {
+    max-width: 100%;
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .video-container iframe {
+    height: 180px;
+  }
+
+  .tutorials-section {
+    padding: 15px;
+  }
+
+  .bronco-section {
+    gap: 20px;
+  }
+
+  /* Responsive stacking for small screens */
+  .leaderboards-row {
+    flex-direction: column;
+  }
+  .leaderboards-row .table-container {
+    width: 100% !important;
+    display: block !important;
+    margin-bottom: 1rem;
+  }
+  .runs-vote-row {
+    flex-direction: column;
+  }
+  .runs-vote-row .plays-leaderboard,
+  .runs-vote-row .voting-container {
+    width: 100% !important;
+    margin-bottom: 1rem;
+  }
+  .runs-vote-row .voting-container .votes-options {
+    flex-direction: column;
+  }
+  .runs-vote-row .voting-container .play-option {
+    width: 100%;
+  }
+}
+
 /* Plays Section Styles */
 .plays-header {
   display: flex;
@@ -1444,4 +1726,44 @@ h3 {
   .form-actions {
     flex-direction: column;
   }
+}
+
+/* Strava integration styles */
+.date-with-source {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rank-with-source {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.race-type-with-source {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.strava-badge {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  cursor: help;
+}
+
+.strava-badge:hover {
+  opacity: 1;
+}
+
+.strava-icon {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  cursor: help;
+  transition: opacity 0.2s ease;
+}
+
+.strava-icon:hover {
+  opacity: 1;
 }

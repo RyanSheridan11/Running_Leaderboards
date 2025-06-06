@@ -1,3 +1,9 @@
+production:
+  strava_sync:
+    class: StravaSyncJob
+    queue: default
+    schedule: every 15 minutes
+
 # production:
 #   periodic_cleanup:
 #     class: CleanSoftDeletedRecordsJob

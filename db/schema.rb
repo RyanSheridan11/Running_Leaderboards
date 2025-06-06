@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_31_121507) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_223151) do
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.date "start_date"
@@ -53,7 +53,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_31_121507) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "race_type", default: "5k", null: false
+    t.string "source"
     t.index ["user_id"], name: "index_runs_on_user_id"
+  end
+
+  create_table "strava_tokens", force: :cascade do |t|
+    t.string "access_token"
+    t.string "refresh_token"
+    t.datetime "expires_at"
+    t.integer "expires_in"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -62,6 +72,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_31_121507) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "admin", default: false, null: false
+    t.string "strava_athlete_id"
   end
 
   add_foreign_key "plays", "events"

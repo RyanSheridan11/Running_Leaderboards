@@ -28,7 +28,14 @@
       <tbody>
         <% @unique_5k_runs.each_with_index do |run, index| %>
           <tr>
-            <td><%= index + 1 %></td>
+            <td>
+              <div class="rank-with-source">
+                <%= index + 1 %>
+                <% if run.from_strava? %>
+                  <span class="strava-icon" title="Synced from Strava">🏃‍♂️</span>
+                <% end %>
+              </div>
+            </td>
             <td>
               <% name = run.user.username %>
               <% if (admin? || run.user == current_user) %>
@@ -37,7 +44,11 @@
                 <%= name %>
               <% end %>
             </td>
-            <td><%= run.date.strftime("%B %d, %Y") %></td>
+            <td>
+              <div class="date-with-source">
+                <%= run.date.strftime("%B %d, %Y") %>
+              </div>
+            </td>
             <td><%= format_pace(run.time, run.race_type) %></td>
             <td><%= format_time(run.time, run.race_type) %></td>
             <% if admin? %>
@@ -72,7 +83,14 @@
       <tbody>
         <% @unique_bronco_runs.each_with_index do |run, index| %>
           <tr>
-            <td><%= index + 1 %></td>
+            <td>
+              <div class="rank-with-source">
+                <%= index + 1 %>
+                <% if run.from_strava? %>
+                  <span class="strava-icon" title="Synced from Strava">🏃‍♂️</span>
+                <% end %>
+              </div>
+            </td>
             <td>
               <% name = run.user.username %>
               <% if admin? || run.user == current_user %>
@@ -81,7 +99,11 @@
                 <%= name %>
               <% end %>
             </td>
-            <td><%= run.date.strftime("%B %d, %Y") %></td>
+            <td>
+              <div class="date-with-source">
+                <%= run.date.strftime("%B %d, %Y") %>
+              </div>
+            </td>
             <td><%= format_pace(run.time, run.race_type) %></td>
             <td><%= format_time(run.time, run.race_type) %></td>
             <% if admin? %>

@@ -14,7 +14,7 @@ User.find_or_create_by!(username: "nick") do |user|
 end
 
 # Create regular user if not exists
-regular_user = User.find_or_create_by!(username: "testuser") do |user|
+User.find_or_create_by!(username: "testuser") do |user|
   user.password = "password"
   user.admin = false
 end
@@ -40,15 +40,75 @@ end
 
 # Create some test plays for approval workflow
 unless Play.exists?
+  # Get Youth Champs event
+  youth_champs = Event.find_by(name: 'Youth Champs')
+
+  # Create some users first for the plays
+  play_users = []
+  [ 'james_bowen', 'ben_coubrough', 'michael_james', 'finlay_armstrong', 'cooper_mccone' ].each do |username|
+    user = User.find_or_create_by!(username: username) do |u|
+      u.password = 'password'
+      u.admin = false
+    end
+    play_users << user
+  end
+
   # Pending plays
   Play.create!(
     title: "Havik D -> Callahan",
     description: "Very sick play",
     video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    user: regular_user,
-    status: "pending"
+    user: play_users.sample,
+    event: youth_champs
   )
-  puts "Created #{Play.count} test plays"
+
+  # Create 5 additional plays with random ELO ratings between 900-1100
+  play_data = [
+    {
+      title: "Backhand Hammer to the End Zone",
+      description: "Perfect break side throw under pressure",
+      video_url: "https://www.youtube.com/watch?v=example1",
+      elo: rand(900..1100)
+    },
+    {
+      title: "Layout Grab in Traffic",
+      description: "Incredible extension to secure the disc",
+      video_url: "https://www.youtube.com/watch?v=example2",
+      elo: rand(900..1100)
+    },
+    {
+      title: "Huck to Callahan",
+      description: "Long throw intercepted for the score",
+      video_url: "https://www.youtube.com/watch?v=example3",
+      elo: rand(900..1100)
+    },
+    {
+      title: "Sky over Two Defenders",
+      description: "Dominant aerial display at the goal line",
+      video_url: "https://www.youtube.com/watch?v=example4",
+      elo: rand(900..1100)
+    },
+    {
+      title: "Greatest Save",
+      description: "Toe-tap keep alive leading to assist",
+      video_url: "https://www.youtube.com/watch?v=example5",
+      elo: rand(900..1100)
+    }
+  ]
+
+  play_data.each do |data|
+    Play.create!(
+      title: data[:title],
+      description: data[:description],
+      video_url: data[:video_url],
+      user: play_users.sample,
+      status: "approved",
+      elo: data[:elo],
+      event: youth_champs
+    )
+  end
+
+  puts "Created #{Play.count} test plays for Youth Champs event"
 end
 
 # Create additional users and random run data

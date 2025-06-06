@@ -51,9 +51,14 @@
           <% @runs.each do |run| %>
             <tr>
               <td>
-                <span class="race-type-badge <%= run.race_type %>">
-                  <%= run.race_type.upcase %>
-                </span>
+                <div class="race-type-with-source">
+                  <span class="race-type-badge <%= run.race_type %>">
+                    <%= run.race_type.upcase %>
+                  </span>
+                  <% if run.from_strava? %>
+                    <span class="strava-icon" title="Synced from Strava">🏃‍♂️</span>
+                  <% end %>
+                </div>
               </td>
               <td><%= format_time(run.time, run.race_type) %></td>
               <td><%= run.date.strftime("%B %d, %Y") %></td>

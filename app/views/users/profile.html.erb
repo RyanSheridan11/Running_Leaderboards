@@ -45,6 +45,7 @@
             <th>Race Type</th>
             <th>Time</th>
             <th>Date</th>
+            <th>Source</th>
             <% if current_user == @user %>
               <th>Actions</th>
             <% end %>
@@ -54,12 +55,34 @@
           <% @runs.each do |run| %>
             <tr>
               <td>
-                <span class="race-type-badge <%= run.race_type %>">
-                  <%= run.race_type.upcase %>
-                </span>
+                <div class="race-type-with-source">
+                  <span class="race-type-badge <%= run.race_type %>">
+                    <%= run.race_type.upcase %>
+                  </span>
+                  <% if run.from_strava? %>
+                    <span class="strava-icon" title="Synced from Strava">🏃‍♂️</span>
+                  <% end %>
+                </div>
               </td>
               <td><%= format_time(run.time, run.race_type) %></td>
-              <td><%= run.date.strftime("%B %d, %Y") %></td>
+              <td>
+                <div class="date-with-source">
+                  <%= run.date.strftime("%B %d, %Y") %>
+                </div>
+              </td>
+              <td>
+                <div class="source-badge">
+                  <% if run.from_strava? %>
+                    <span class="source strava" title="Synced from Strava">
+                      🏃‍♂️ Strava
+                    </span>
+                  <% else %>
+                    <span class="source manual" title="Manually entered">
+                      ✏️ Manual
+                    </span>
+                  <% end %>
+                </div>
+              </td>
               <% if current_user == @user %>
                 <td>
                   <%= link_to "Edit", edit_run_path(run), class: "btn btn-sm btn-secondary" %>
@@ -132,7 +155,6 @@
     color: #666;
     font-size: 0.9rem;
   }
-
   .runs-section h2 {
     margin-bottom: 1rem;
   }

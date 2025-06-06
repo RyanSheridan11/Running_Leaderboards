@@ -5,9 +5,7 @@ class StravaService
   def initialize
     @club_id = Rails.application.credentials.strava&.club_id
 
-    strava_token = StravaToken.new(access_token: Rails.application.credentials.strava&.access_token,
-                                   refresh_token: Rails.application.credentials.strava&.refresh_token,
-                                   expires_at: Rails.application.credentials.strava&.expires_at)
+    strava_token = StravaToken.last
     @access_token = strava_token.access_token
     if strava_token.expired?
       Rails.logger.info "Strava token expired, refreshing..."

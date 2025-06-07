@@ -1,0 +1,7 @@
+# Thruster HTTP/2 proxy configuration
+port: 80
+target_port: 3000
+max_request_body: 0
+storage_path: /rails/storage
+log_level: infos
+x_sendfile: true

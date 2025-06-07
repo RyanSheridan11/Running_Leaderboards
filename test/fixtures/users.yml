@@ -1,84 +1,83 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-james_bowen:
-  username: jamesb
-  firstname: James
-  lastname: Bowen
+test_user_one:
+  username: testuser1
+  firstname: Test
+  lastname: User One
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-benjamin_coubrough:
-  username: benjaminc
-  firstname: Benjamin
-  lastname: Coubrough
+test_user_two:
+  username: testuser2
+  firstname: Test
+  lastname: User Two
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-michael_james:
-  username: michaelj
-  firstname: Michael
-  lastname: James
+test_user_three:
+  username: testuser3
+  firstname: Test
+  lastname: User Three
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-finlay_armstrong:
-  username: finlaya
-  firstname: Finlay
-  lastname: Armstrong
+test_user_four:
+  username: testuser4
+  firstname: Test
+  lastname: User Four
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-cooper_mccone:
-  username: cooperm
-  firstname: Cooper
-  lastname: McCone
+test_user_five:
+  username: testuser5
+  firstname: Test
+  lastname: User Five
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-darren_leishman:
-  username: darrenl
-  firstname: Darren
-  lastname: Leishman
-  strava_username: darren_leishman
+test_admin_user:
+  username: testadmin
+  firstname: Test
+  lastname: Admin
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: true
+
+test_user_with_strava:
+  username: teststrava
+  firstname: Test
+  lastname: Strava User
+  strava_username: test_strava
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-harry_coubrough:
-  username: harryc
-  firstname: Harry
-  lastname: Coubrough
-  strava_username: harry_coubrough
+test_user_runner:
+  username: testrunner
+  firstname: Test
+  lastname: Runner
+  strava_username: test_runner
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-troy_craddock:
-  username: troyc
-  firstname: Troy
-  lastname: Craddock
-  strava_username: troy_craddock
+test_user_athlete:
+  username: testathlete
+  firstname: Test
+  lastname: Athlete
+  strava_username: test_athlete
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-andy_huang:
-  username: andyh
-  firstname: Andy
-  lastname: Huang
-  strava_username: andy_huang
+test_user_competitor:
+  username: testcompetitor
+  firstname: Test
+  lastname: Competitor
+  strava_username: test_competitor
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
-alex_dewhurst:
-  username: alexd
-  firstname: Alex
-  lastname: Dewhurst
-  strava_username: alex_dewhurst
-  password_digest: <%= BCrypt::Password.create('password') %>
-  admin: false
-
-gatsby_cohen:
-  username: gatsbyc
-  firstname: Gatsby
-  lastname: Cohen
-  strava_username: gatsby_cohen
+test_user_player:
+  username: testplayer
+  firstname: Test
+  lastname: Player
+  strava_username: test_player
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false

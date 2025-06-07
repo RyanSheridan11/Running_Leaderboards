@@ -1,0 +1,148 @@
+<h1>Edit Run - Admin Panel</h1>
+
+<div class="admin-controls">
+  <%= link_to "← Back to Runs", admin_runs_path, class: "btn btn-secondary" %>
+  <%= link_to "Dashboard", admin_dashboard_path, class: "btn btn-outline-primary" %>
+</div>
+
+<div class="form-container">
+  <%= form_with model: [:admin, @run], local: true, class: "run-form" do |form| %>
+    <% if @run.errors.any? %>
+      <div class="alert alert-danger">
+        <ul>
+          <% @run.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :date, "Date" %>
+      <%= form.date_field :date, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :race_type, "Race Type" %>
+      <%= form.select :race_type, [["5K", "5k"], ["Bronco (1.2K)", "bronco"]], {}, { class: "form-control", required: true } %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :time, "Time" %>
+      <%= form.text_field :time,
+          value: format_time(@run.time, @run.race_type),
+          class: "form-control",
+          placeholder: @run.race_type == "bronco" ? "m:ss (e.g. 5:30)" : "mm:ss (e.g. 25:30)",
+          required: true %>
+      <small class="form-text text-muted">
+        Format: <%= @run.race_type == "bronco" ? "m:ss (minutes:seconds)" : "mm:ss (minutes:seconds)" %>
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">User</label>
+      <p class="form-control-static"><%= @run.user.full_name.present? ? @run.user.full_name : @run.user.username %></p>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Source</label>
+      <p class="form-control-static">
+        <% if @run.from_strava? %>
+          🏃‍♂️ Synced from Strava
+        <% else %>
+          ✏️ Manually entered
+        <% end %>
+      </p>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Update Run", class: "btn btn-primary" %>
+      <%= link_to "Cancel", admin_runs_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .admin-controls {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .run-form .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .run-form .form-label,
+  .run-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .run-form .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  .run-form .form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+  }
+
+  .form-control-static {
+    padding: 0.75rem 0;
+    margin: 0;
+    color: #666;
+    background: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+  }
+
+  .form-text {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  .alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  .alert ul {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+</style>

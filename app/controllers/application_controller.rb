@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :logged_in?, :admin?
 
+  before_action :check_password_setup
+
   private
 
   def current_user
@@ -27,6 +29,17 @@ class ApplicationController < ActionController::Base
   def require_admin
     unless admin?
       redirect_to root_path, alert: "You must be an admin to access this section."
+    end
+  end
+
+  def check_password_setup
+    return unless logged_in?
+    return if controller_name == "sessions" # Don't redirect from sessions controller
+
+    if current_user.needs_password_setup?
+      session[:pending_user_id] = current_user.id
+      session[:user_id] = nil  # Log them out until password is set
+      redirect_to setup_password_path, alert: "Please set up your password to continue."
     end
   end
 end

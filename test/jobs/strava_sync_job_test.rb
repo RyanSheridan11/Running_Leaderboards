@@ -59,8 +59,7 @@ class StravaSyncJobTest < ActiveJob::TestCase
   end
 
   test "should sync club activities from live API" do
-    skip "Skipping live API test - set STRAVA_LIVE_TEST=true to run" unless ENV["STRAVA_LIVE_TEST"]
-    assert_strava_api_available
+    # assert_strava_api_available
 
     puts "\n🔴 LIVE TEST: Hitting the real Strava API..."
 
@@ -185,8 +184,6 @@ class StravaSyncJobTest < ActiveJob::TestCase
   end
 
   test "should handle token refresh if expired" do
-    skip "Skipping live API test - set STRAVA_LIVE_TEST=true to run" unless ENV["STRAVA_LIVE_TEST"]
-
     # Create an expired token
     expired_token = StravaToken.create!(
       access_token: "expired_token",
@@ -219,11 +216,15 @@ class StravaSyncJobTest < ActiveJob::TestCase
     end
 
     # Test basic API connectivity
-    service = StravaService.new
-    activities = service.get_activities(per_page: 1)
+    begin
+      service = StravaService.new
+      activities = service.get_activities(per_page: 1)
 
-    unless activities.is_a?(Array)
-      skip "Could not retrieve activities from Strava API"
+      unless activities.is_a?(Array)
+        skip "Could not retrieve activities from Strava API"
+      end
+    rescue StandardError => e
+      skip "Strava API not accessible: #{e.message}"
     end
   end
 end

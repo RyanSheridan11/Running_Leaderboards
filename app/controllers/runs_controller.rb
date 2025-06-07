@@ -116,7 +116,7 @@ class RunsController < ApplicationController
   end
 
   def check_owner
-    unless @run.user == current_user
+    unless @run.user == current_user || current_user&.admin?
       redirect_to root_path, alert: "You can only edit your own runs."
     end
   end

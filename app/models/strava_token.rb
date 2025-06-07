@@ -4,7 +4,8 @@ class StravaToken < ApplicationRecord
   validates :access_token, :refresh_token, :expires_at, presence: true
 
   def expired?
-    Time.current >= expires_at
+    # Add 2 hours of leeway - consider token expired 2 hours before actual expiration
+    Time.current >= (expires_at - 2.hours)
   end
 
   def self.current
@@ -37,3 +38,10 @@ class StravaToken < ApplicationRecord
     end
   end
 end
+
+
+# curl -X POST https://www.strava.com/api/v3/oauth/token \
+# -d client_id=your_id \
+# -d client_secret=your_secret \
+# -d grant_type=refresh_token \
+# -d refresh_token=your_refresh_token

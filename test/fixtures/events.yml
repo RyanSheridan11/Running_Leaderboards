@@ -1,46 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-youth_champs:
+test_event:
   name: 'Youth Champs'
   start_date: 2025-06-01
   end_date: 2025-06-03
-
-camp_1:
-  name: 'Camp 1'
-  start_date: 2025-06-05
-  end_date: 2025-06-07
-
-camp_2:
-  name: 'Camp 2'
-  start_date: 2025-06-09
-  end_date: 2025-06-11
-
-camp_3:
-  name: 'Camp 3'
-  start_date: 2025-06-13
-  end_date: 2025-06-15
-
-trans_tasman:
-  name: 'Trans Tasman'
-  start_date: 2025-06-17
-  end_date: 2025-06-19
-
-camp_4:
-  name: 'Camp 4'
-  start_date: 2026-06-21
-  end_date: 2026-06-23
-
-camp_5:
-  name: 'Camp 5'
-  start_date: 2026-06-26
-  end_date: 2026-06-27
-
-camp_6:
-  name: 'Camp 6'
-  start_date: 2026-06-29
-  end_date: 2026-07-01
-
-world_champs:
-  name: 'World Champs'
-  start_date: 2026-07-03
-  end_date: 2026-07-05

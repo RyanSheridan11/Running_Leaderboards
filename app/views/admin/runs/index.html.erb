@@ -60,6 +60,8 @@
             </div>
           </td>
           <td>
+            <%= link_to "Edit", edit_admin_run_path(run),
+                class: "btn btn-primary btn-sm" %>
             <%= link_to "Delete", admin_run_path(run),
                 method: :delete,
                 class: "btn btn-danger btn-sm",

@@ -16,6 +16,10 @@ class StravaService
       expires_at: Rails.application.credentials.strava&.expires_at || raise("Strava expires_at not configured")
       )
     @access_token = strava_token.access_token
+    puts "🔄 Access Token: #{@access_token}"
+    puts "🔄 Token Expired?: #{strava_token.expired?}"
+    puts "🔄 Expiry time: #{strava_token.expires_at}"
+    puts "🔄 Time: #{Time.current}"
     if strava_token.expired?
       Rails.logger.info "Strava token expired, refreshing..."
       strava_token = strava_token.refresh!
@@ -24,17 +28,36 @@ class StravaService
     @options = { headers: { "Authorization" => "Bearer #{@access_token}" } }
   end
 
-  def get_activities(page: 1, per_page: 50)
+  def get_activities(page: 1, per_page: 5)
     query_params = { page: page, per_page: per_page }
 
     response = self.class.get("/clubs/#{@club_id}/activities", @options.merge(query: query_params))
 
+    # puts "Request: #{@options.merge(query: query_params)}"
     puts "Response: #{response}"
     if response.success?
       response.parsed_response
     else
       Rails.logger.error "Strava API error: #{response.code} - #{response.message}"
-      []
+
+      # Handle authentication errors specifically
+      if response.code == 401
+        error_message = "Strava authentication failed (401 Unauthorized). Token may be expired or invalid."
+        Rails.logger.error error_message
+        raise StandardError, error_message
+      elsif response.code == 403
+        error_message = "Strava access forbidden (403 Forbidden). Check permissions or rate limits."
+        Rails.logger.error error_message
+        raise StandardError, error_message
+      elsif response.code == 429
+        error_message = "Strava rate limit exceeded (429 Too Many Requests). Please try again later."
+        Rails.logger.error error_message
+        raise StandardError, error_message
+      else
+        error_message = "Strava API error: #{response.code} - #{response.message}"
+        Rails.logger.error error_message
+        raise StandardError, error_message
+      end
     end
   end
 

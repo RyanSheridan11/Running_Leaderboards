@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   post   "/login",  to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
 
+  # Password setup for new users
+  get    "/setup-password", to: "sessions#setup_password", as: :setup_password
+  post   "/setup-password", to: "sessions#create_password"
+
   # User profiles
   get "/profile", to: "users#profile"
 
@@ -21,7 +25,7 @@ Rails.application.routes.draw do
     get "dashboard", to: "dashboard#index"
     post "dashboard/sync", to: "dashboard#trigger_strava_sync", as: :dashboard_sync
 
-    resources :runs, only: [ :index, :destroy ]
+    resources :runs, only: [ :index, :edit, :update, :destroy ]
     resources :users, only: [ :index ]
     resources :race_deadlines
     resources :plays, only: [ :index, :show, :destroy ] do

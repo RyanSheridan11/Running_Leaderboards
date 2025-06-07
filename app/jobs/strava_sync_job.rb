@@ -18,7 +18,7 @@ class StravaSyncJob < ApplicationJob
       strava_service = StravaService.new
 
       # Get recent activities from the club
-      activities = strava_service.get_activities(per_page: 50)
+      activities = strava_service.get_activities(per_page: 5)
 
       if activities.empty?
         Rails.logger.info "No activities found in the club"
@@ -70,10 +70,23 @@ class StravaSyncJob < ApplicationJob
       # Store sync data in Rails cache for dashboard display
       store_sync_data(processed_activities, total_activities, processed_count, created_runs_count)
 
-    rescue => e
+    rescue StandardError => e
       Rails.logger.error "Error syncing club activities: #{e.message}"
-      # Store error data in cache
-      store_sync_data([], 0, 0, 0, e.message)
+
+      # Categorize the error for better dashboard display
+      error_type = case e.message
+      when /authentication failed|401 Unauthorized/i
+        "authentication_error"
+      when /access forbidden|403 Forbidden/i
+        "permission_error"
+      when /rate limit|429 Too Many Requests/i
+        "rate_limit_error"
+      else
+        "general_error"
+      end
+
+      # Store error data in cache with error type
+      store_sync_data([], 0, 0, 0, e.message, error_type)
     end
   end
 
@@ -160,14 +173,15 @@ class StravaSyncJob < ApplicationJob
     User.where("LOWER(firstname) || LOWER(SUBSTR(lastname, 1, 1)) = ?", strava_short_name).first
   end
 
-  def store_sync_data(activities, total_count, processed_count, created_count, error_message = nil)
+  def store_sync_data(activities, total_count, processed_count, created_count, error_message = nil, error_type = nil)
     sync_data = {
       activities: activities,
       total_activities: total_count,
       processed_activities: processed_count,
       created_runs: created_count,
       sync_time: Time.current,
-      error: error_message
+      error: error_message,
+      error_type: error_type
     }
 
     Rails.cache.write("last_strava_sync_data", sync_data, expires_in: 7.days)

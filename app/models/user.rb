@@ -1,10 +1,11 @@
 class User < ApplicationRecord
-  has_secure_password
+  has_secure_password validations: false
   has_many :runs, dependent: :destroy
   has_many :plays, dependent: :destroy
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :firstname, presence: true
   validates :lastname, presence: true
+  validates :password, length: { minimum: 4 }, if: -> { password.present? }
 
   before_validation :normalize_username
   before_validation :generate_unique_username, if: :new_record?
@@ -14,6 +15,14 @@ class User < ApplicationRecord
   def self.find_by_username(username)
     return nil if username.blank?
     where("LOWER(username) = ?", username.to_s.strip.downcase).first
+  end
+
+  def has_password?
+    password_digest.present?
+  end
+
+  def needs_password_setup?
+    !has_password?
   end
 
   def full_name

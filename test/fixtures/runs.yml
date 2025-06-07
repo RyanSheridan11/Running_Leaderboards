@@ -1,77 +1,77 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-james_5k_run:
-  user: james_bowen
+test_user_one_5k_run:
+  user: test_user_one
   race_type: "5k"
   date: 2025-05-28
   time: 1755
   source: "test"
 
-benjamin_5k_run:
-  user: benjamin_coubrough
+test_user_two_5k_run:
+  user: test_user_two
   race_type: "5k"
   date: 2025-05-18
   time: 1880
   source: "test"
 
-michael_5k_run:
-  user: michael_james
+test_user_three_5k_run:
+  user: test_user_three
   race_type: "5k"
   date: 2025-05-25
   time: 1765
   source: "manual"
 
-finlay_5k_run:
-  user: finlay_armstrong
+test_user_four_5k_run:
+  user: test_user_four
   race_type: "5k"
   date: 2025-05-12
   time: 1845
   source: "test"
 
-cooper_5k_run:
-  user: cooper_mccone
+test_user_five_5k_run:
+  user: test_user_five
   race_type: "5k"
   date: 2025-05-30
   time: 1790
   source: "manual"
 
-darren_5k_run:
-  user: darren_leishman
+test_admin_5k_run:
+  user: test_admin_user
   race_type: "5k"
   date: 2025-05-20
   time: 1810
   source: "test"
 
-harry_5k_run:
-  user: harry_coubrough
+test_strava_5k_run:
+  user: test_user_with_strava
   race_type: "5k"
   date: 2025-05-26
   time: 1860
   source: "manual"
 
-troy_5k_run:
-  user: troy_craddock
+test_runner_5k_run:
+  user: test_user_runner
   race_type: "5k"
   date: 2025-05-16
   time: 1835
   source: "test"
 
-andy_5k_run:
-  user: andy_huang
+test_athlete_5k_run:
+  user: test_user_athlete
   race_type: "5k"
   date: 2025-05-24
   time: 1745
   source: "manual"
 
-alex_5k_run:
-  user: alex_dewhurst
+test_competitor_5k_run:
+  user: test_user_competitor
   race_type: "5k"
   date: 2025-05-19
   time: 1825
   source: "test"
 
-gatsby_5k_run:
-  user: gatsby_cohen
+test_player_5k_run:
+  user: test_user_player
   race_type: "5k"
   date: 2025-05-13
   time: 1895

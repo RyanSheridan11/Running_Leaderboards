@@ -24,7 +24,7 @@ namespace :db do
         title: "Backhand Hammer to the End Zone",
         description: "Perfect break side throw under pressure",
         video_url: "https://www.youtube.com/watch?v=example1",
-        username: "benjaminc",
+        username: "testuser1",
         status: "approved",
         elo: 1050
       },
@@ -32,7 +32,7 @@ namespace :db do
         title: "Layout Grab in Traffic",
         description: "Incredible extension to secure the disc",
         video_url: "https://www.youtube.com/watch?v=example2",
-        username: "michaelj",
+        username: "testuser2",
         status: "approved",
         elo: 980
       },
@@ -40,7 +40,7 @@ namespace :db do
         title: "Huck to Callahan",
         description: "Long throw intercepted for the score",
         video_url: "https://www.youtube.com/watch?v=example3",
-        username: "finlaya",
+        username: "testuser3",
         status: "approved",
         elo: 1020
       },
@@ -48,7 +48,7 @@ namespace :db do
         title: "Sky over Two Defenders",
         description: "Dominant aerial display at the goal line",
         video_url: "https://www.youtube.com/watch?v=example4",
-        username: "cooperm",
+        username: "testuser4",
         status: "approved",
         elo: 1100
       },
@@ -56,7 +56,7 @@ namespace :db do
         title: "Greatest Save",
         description: "Toe-tap keep alive leading to assist",
         video_url: "https://www.youtube.com/watch?v=example5",
-        username: "jamesb",
+        username: "testuser5",
         status: "approved",
         elo: 950
       }

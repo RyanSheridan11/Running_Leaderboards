@@ -75,6 +75,60 @@
         <% if @last_sync_result %>
           <p class="sync-result"><%= @last_sync_result %></p>
         <% end %>
+
+        <!-- Display detailed sync data from cache -->
+        <% if @sync_data %>
+          <div class="sync-details">
+            <% if @sync_data[:error] %>
+              <div class="sync-error">
+                <h4>❌ Error Details</h4>
+                <p class="error-message"><strong>Type:</strong>
+                  <span class="error-type-badge <%= @sync_data[:error_type] %>">
+                    <%= @sync_data[:error_type]&.humanize || 'Unknown' %>
+                  </span>
+                </p>
+                <p class="error-description"><%= @sync_data[:error] %></p>
+                <% if @sync_data[:error_type] == 'authentication_error' %>
+                  <div class="error-help">
+                    <p><strong>🔧 Troubleshooting:</strong></p>
+                    <ul>
+                      <li>Check if your Strava access token has expired</li>
+                      <li>Verify that the application has proper permissions to access the club</li>
+                      <li>Ensure the refresh token is valid and can be used to get a new access token</li>
+                    </ul>
+                  </div>
+                <% elsif @sync_data[:error_type] == 'permission_error' %>
+                  <div class="error-help">
+                    <p><strong>🔧 Troubleshooting:</strong></p>
+                    <ul>
+                      <li>Check if the application has been granted access to the Strava club</li>
+                      <li>Verify that the club ID in credentials is correct</li>
+                      <li>Ensure the token has the required scope permissions</li>
+                    </ul>
+                  </div>
+                <% elsif @sync_data[:error_type] == 'rate_limit_error' %>
+                  <div class="error-help">
+                    <p><strong>🔧 Troubleshooting:</strong></p>
+                    <ul>
+                      <li>Wait before trying again - Strava has rate limits</li>
+                      <li>Consider reducing sync frequency if this occurs regularly</li>
+                    </ul>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="sync-success">
+                <h4>✅ Last Sync Details</h4>
+                <p><strong>Activities found:</strong> <%= @sync_data[:total_activities] %></p>
+                <p><strong>5K runs processed:</strong> <%= @sync_data[:processed_activities] %></p>
+                <p><strong>New runs created:</strong> <%= @sync_data[:created_runs] %></p>
+                <% if @sync_data[:sync_time] %>
+                  <p><strong>Sync time:</strong> <%= @sync_data[:sync_time].strftime('%B %d, %Y at %I:%M %p') %></p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </div>
 
       <div class="sync-actions">
@@ -490,6 +544,99 @@
     font-style: italic;
     text-align: center;
     padding: 1rem;
+  }
+
+  /* Sync Details Styles */
+  .sync-details {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  .sync-error, .sync-success {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .sync-error {
+    border-left: 4px solid #dc3545;
+    background: #f8d7da;
+  }
+
+  .sync-success {
+    border-left: 4px solid #28a745;
+    background: #d1ecf1;
+  }
+
+  .sync-error h4, .sync-success h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 1rem;
+  }
+
+  .error-message, .error-description {
+    margin: 0.5rem 0;
+    color: #721c24;
+  }
+
+  .error-type-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+
+  .error-type-badge.authentication_error {
+    background-color: #ffeaa7;
+    color: #d63031;
+  }
+
+  .error-type-badge.permission_error {
+    background-color: #fab1a0;
+    color: #e17055;
+  }
+
+  .error-type-badge.rate_limit_error {
+    background-color: #fd79a8;
+    color: #e84393;
+  }
+
+  .error-type-badge.general_error {
+    background-color: #ddd;
+    color: #636e72;
+  }
+
+  .error-help {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+  }
+
+  .error-help p {
+    margin: 0 0 0.5rem 0;
+    font-weight: bold;
+    color: #495057;
+  }
+
+  .error-help ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: #6c757d;
+  }
+
+  .error-help li {
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+  }
+
+  .sync-success p {
+    margin: 0.25rem 0;
+    color: #155724;
   }
 
   /* Responsive */

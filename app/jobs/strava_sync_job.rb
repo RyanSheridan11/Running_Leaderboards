@@ -1,24 +1,24 @@
 class StravaSyncJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
-    Rails.logger.info "Starting Strava sync job"
+  def perform(per_page: 5)
+    Rails.logger.info "Starting Strava sync job with per_page: #{per_page}"
 
-    sync_club_activities
+    sync_club_activities(per_page)
 
     Rails.logger.info "Completed Strava sync job"
   end
 
   private
 
-  def sync_club_activities
-    Rails.logger.info "Syncing activities from Strava club"
+  def sync_club_activities(per_page = 5)
+    Rails.logger.info "Syncing activities from Strava club (per_page: #{per_page})"
 
     begin
       strava_service = StravaService.new
 
       # Get recent activities from the club
-      activities = strava_service.get_activities(per_page: 5)
+      activities = strava_service.get_activities(per_page: per_page)
 
       if activities.empty?
         Rails.logger.info "No activities found in the club"

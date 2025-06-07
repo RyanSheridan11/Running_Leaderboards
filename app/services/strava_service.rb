@@ -5,7 +5,16 @@ class StravaService
   def initialize
     @club_id = Rails.application.credentials.strava&.club_id
 
-    strava_token = StravaToken.last
+    if @club_id.nil?
+      Rails.logger.error "Strava club_id is not configured in credentials"
+      raise "Strava club_id is required but not configured"
+    end
+
+    strava_token = StravaToken.last || StravaToken.create!(
+      access_token: Rails.application.credentials.strava&.access_token || raise("Strava access_token not configured"),
+      refresh_token: Rails.application.credentials.strava&.refresh_token || raise("Strava refresh_token not configured"),
+      expires_at: Rails.application.credentials.strava&.expires_at || raise("Strava expires_at not configured")
+      )
     @access_token = strava_token.access_token
     if strava_token.expired?
       Rails.logger.info "Strava token expired, refreshing..."

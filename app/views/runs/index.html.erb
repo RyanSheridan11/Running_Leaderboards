@@ -37,7 +37,7 @@
               </div>
             </td>
             <td>
-              <% name = run.user.username %>
+              <% name = run.user.full_name.present? ? run.user.full_name : run.user.username %>
               <% if (admin? || run.user == current_user) %>
                 <%= link_to name, user_path(run.user), class: "user-link" %>
               <% else %>
@@ -92,7 +92,7 @@
               </div>
             </td>
             <td>
-              <% name = run.user.username %>
+              <% name = run.user.full_name.present? ? run.user.full_name : run.user.username %>
               <% if admin? || run.user == current_user %>
                 <%= link_to name, user_path(run.user), class: "user-link" %>
               <% else %>

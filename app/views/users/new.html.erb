@@ -11,8 +11,20 @@
     </div>
   <% end %>
   <div>
-    <%= form.label :username %><br>
-    <%= form.text_field :username %>
+    <%= form.label :firstname, "First Name" %><br>
+    <%= form.text_field :firstname, required: true, id: "user_firstname" %>
+  </div>
+  <div>
+    <%= form.label :lastname, "Last Name" %><br>
+    <%= form.text_field :lastname, required: true, id: "user_lastname" %>
+  </div>
+  <div>
+    <%= form.label :username, "Username (auto-generated)" %><br>
+    <%= form.text_field :username, readonly: true, id: "user_username", placeholder: "Will be generated automatically", style: "background-color: #f8f9fa; color: #6c757d;" %>
+  </div>
+  <div>
+    <%= form.label :strava_username, "Strava Username (optional)" %><br>
+    <%= form.text_field :strava_username, placeholder: "Your Strava username" %>
   </div>
   <div>
     <%= form.label :password %><br>
@@ -26,4 +38,42 @@
     <%= form.submit "Sign Up" %>
   </div>
 <% end %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const firstnameField = document.getElementById('user_firstname');
+  const lastnameField = document.getElementById('user_lastname');
+  const usernameField = document.getElementById('user_username');
+
+  function generateUsername() {
+    const firstname = firstnameField.value.trim();
+    const lastname = lastnameField.value.trim();
+
+    if (firstname && lastname) {
+      // Remove special characters and convert to lowercase
+      const cleanFirstname = firstname.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      const cleanLastname = lastname.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+      if (cleanFirstname && cleanLastname) {
+        const username = cleanFirstname + cleanLastname.charAt(0);
+        usernameField.value = username;
+        usernameField.style.color = '#333';
+      } else {
+        usernameField.value = '';
+        usernameField.style.color = '#6c757d';
+      }
+    } else {
+      usernameField.value = '';
+      usernameField.style.color = '#6c757d';
+    }
+  }
+
+  // Generate username when either name field changes
+  firstnameField.addEventListener('input', generateUsername);
+  lastnameField.addEventListener('input', generateUsername);
+
+  // Generate initial username if fields are pre-filled
+  generateUsername();
+});</script>
+
 <p>Already have an account? <%= link_to "Log in", login_path %></p>

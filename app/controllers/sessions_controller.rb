@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(username: params[:username])
+    user = User.find_by_username(params[:username])
     if user.nil?
       flash.now[:alert] = "User does not exist"
       render :new, status: :unprocessable_entity

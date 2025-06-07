@@ -1,6 +1,7 @@
 <h1>Admin Panel - All Users</h1>
 
 <div class="admin-controls">
+  <%= link_to "← Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
   <%= link_to "Manage Runs", admin_runs_path, class: "btn btn-outline-primary" %>
   <%= link_to "Race Deadlines", admin_race_deadlines_path, class: "btn btn-outline-primary" %>
   <%= link_to "Manage Plays", admin_plays_path, class: "btn btn-outline-primary" %>
@@ -10,7 +11,7 @@
   <table class="leaderboard-table">
     <thead>
       <tr>
-        <th>Username</th>
+        <th>Name</th>
         <th>Admin</th>
         <th>Total Runs</th>
         <th>5k Runs</th>
@@ -24,7 +25,7 @@
       <% @users.each do |user| %>
         <tr>
           <td>
-            <%= link_to user.username, user_path(user), class: "user-link" %>
+            <%= link_to (user.full_name.present? ? user.full_name : user.username), user_path(user), class: "user-link" %>
           </td>
           <td>
             <% if user.admin? %>

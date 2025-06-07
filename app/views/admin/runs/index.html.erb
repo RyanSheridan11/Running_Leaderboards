@@ -1,6 +1,8 @@
 <h1>Admin Panel - All Runs</h1>
 
 <div class="admin-controls">
+  <%= link_to "← Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
+
   <%= link_to "All Runs", admin_runs_path, class: "btn btn-secondary #{'active' if params[:race_type].blank?}" %>
   <%= link_to "5k Runs", admin_runs_path(race_type: "5k"), class: "btn btn-secondary #{'active' if params[:race_type] == '5k'}" %>
   <%= link_to "Bronco Runs", admin_runs_path(race_type: "bronco"), class: "btn btn-secondary #{'active' if params[:race_type] == 'bronco'}" %>
@@ -35,7 +37,7 @@
             </div>
           </td>
           <td>
-            <%= link_to run.user.username, user_path(run.user), class: "user-link" %>
+            <%= link_to (run.user.full_name.present? ? run.user.full_name : run.user.username), user_path(run.user), class: "user-link" %>
           </td>
           <td>
             <span class="race-type-badge <%= run.race_type %>">

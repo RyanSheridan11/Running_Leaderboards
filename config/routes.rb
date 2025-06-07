@@ -18,6 +18,9 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
+    get "dashboard", to: "dashboard#index"
+    post "dashboard/sync", to: "dashboard#trigger_strava_sync", as: :dashboard_sync
+
     resources :runs, only: [ :index, :destroy ]
     resources :users, only: [ :index ]
     resources :race_deadlines

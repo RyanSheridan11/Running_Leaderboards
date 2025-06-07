@@ -1,1 +1,84 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+james_bowen:
+  username: jamesb
+  firstname: James
+  lastname: Bowen
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+benjamin_coubrough:
+  username: benjaminc
+  firstname: Benjamin
+  lastname: Coubrough
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+michael_james:
+  username: michaelj
+  firstname: Michael
+  lastname: James
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+finlay_armstrong:
+  username: finlaya
+  firstname: Finlay
+  lastname: Armstrong
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+cooper_mccone:
+  username: cooperm
+  firstname: Cooper
+  lastname: McCone
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+darren_leishman:
+  username: darrenl
+  firstname: Darren
+  lastname: Leishman
+  strava_username: darren_leishman
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+harry_coubrough:
+  username: harryc
+  firstname: Harry
+  lastname: Coubrough
+  strava_username: harry_coubrough
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+troy_craddock:
+  username: troyc
+  firstname: Troy
+  lastname: Craddock
+  strava_username: troy_craddock
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+andy_huang:
+  username: andyh
+  firstname: Andy
+  lastname: Huang
+  strava_username: andy_huang
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+alex_dewhurst:
+  username: alexd
+  firstname: Alex
+  lastname: Dewhurst
+  strava_username: alex_dewhurst
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false
+
+gatsby_cohen:
+  username: gatsbyc
+  firstname: Gatsby
+  lastname: Cohen
+  strava_username: gatsby_cohen
+  password_digest: <%= BCrypt::Password.create('password') %>
+  admin: false

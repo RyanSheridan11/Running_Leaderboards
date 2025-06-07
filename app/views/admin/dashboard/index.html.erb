@@ -1,0 +1,518 @@
+<% content_for :title, "Admin Dashboard" %>
+
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>🏃‍♂️ Running Leaderboard Admin Dashboard</h1>
+    <p class="subtitle">Central hub for all administrative functions</p>
+  </div>
+
+  <!-- Quick Stats Overview -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <h3><%= @total_users %></h3>
+        <p>Total Users</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">🏃‍♂️</div>
+      <div class="stat-content">
+        <h3><%= @total_runs %></h3>
+        <p>Total Runs</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">📱</div>
+      <div class="stat-content">
+        <h3><%= @total_strava_runs %></h3>
+        <p>Strava Runs</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">✏️</div>
+      <div class="stat-content">
+        <h3><%= @total_manual_runs %></h3>
+        <p>Manual Runs</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">⏰</div>
+      <div class="stat-content">
+        <h3><%= @pending_plays %></h3>
+        <p>Pending Plays</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-content">
+        <h3><%= @active_deadlines %></h3>
+        <p>Active Deadlines</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strava Sync Section -->
+  <div class="sync-section">
+    <div class="section-header">
+      <h2>🏃‍♂️ Strava Integration</h2>
+    </div>
+
+    <div class="sync-status-card">
+      <div class="sync-info">
+        <h3>Sync Status</h3>
+        <p class="sync-status <%= @last_sync_status.include?('success') ? 'success' : @last_sync_status.include?('Failed') ? 'error' : 'pending' %>">
+          <%= @last_sync_status %>
+        </p>
+        <% if @last_sync_time %>
+          <p class="sync-time">Last run: <%= @last_sync_time.strftime('%B %d, %Y at %I:%M %p') %></p>
+        <% end %>
+        <% if @last_sync_result %>
+          <p class="sync-result"><%= @last_sync_result %></p>
+        <% end %>
+      </div>
+
+      <div class="sync-actions">
+        <%= button_to "🔄 Run Strava Sync", admin_dashboard_sync_path,
+                      method: :post,
+                      class: "btn btn-primary sync-btn",
+                      data: {
+                        confirm: "This will fetch the latest activities from Strava. Continue?",
+                        disable_with: "🔄 Syncing..."
+                      } %>
+        <p class="sync-note">Fetches recent 5K runs from the Strava club</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Management Links -->
+  <div class="management-grid">
+    <div class="section-header">
+      <h2>📊 Management Tools</h2>
+    </div>
+
+    <div class="management-cards">
+      <div class="management-card">
+        <div class="card-icon">🏃‍♂️</div>
+        <h3>Manage Runs</h3>
+        <p>View, filter, and delete all user runs</p>
+        <div class="card-stats">
+          <span class="stat">Total: <%= @total_runs %></span>
+          <span class="stat">5K: <%= Run.five_k.count %></span>
+          <span class="stat">Bronco: <%= Run.bronco.count %></span>
+        </div>
+        <%= link_to "View Runs", admin_runs_path, class: "btn btn-outline-primary" %>
+      </div>
+
+      <div class="management-card">
+        <div class="card-icon">👥</div>
+        <h3>Manage Users</h3>
+        <p>View all registered users and their statistics</p>
+        <div class="card-stats">
+          <span class="stat">Total: <%= @total_users %></span>
+          <span class="stat">Admins: <%= User.where(admin: true).count %></span>
+        </div>
+        <%= link_to "View Users", admin_users_path, class: "btn btn-outline-primary" %>
+      </div>
+
+      <div class="management-card">
+        <div class="card-icon">📅</div>
+        <h3>Race Deadlines</h3>
+        <p>Manage race submission deadlines and track compliance</p>
+        <div class="card-stats">
+          <span class="stat">Active: <%= @active_deadlines %></span>
+          <span class="stat">Total: <%= RaceDeadline.count %></span>
+        </div>
+        <%= link_to "View Deadlines", admin_race_deadlines_path, class: "btn btn-outline-primary" %>
+      </div>
+
+      <div class="management-card">
+        <div class="card-icon">🎬</div>
+        <h3>Manage Plays</h3>
+        <p>Review, approve, or reject submitted plays</p>
+        <div class="card-stats">
+          <span class="stat">Pending: <%= @pending_plays %></span>
+          <span class="stat">Approved: <%= Play.where(status: 'approved').count %></span>
+        </div>
+        <%= link_to "View Plays", admin_plays_path, class: "btn btn-outline-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="recent-activity">
+    <div class="activity-section">
+      <h3>🔥 Recent Runs</h3>
+      <% if @recent_runs.any? %>
+        <div class="recent-list">
+          <% @recent_runs.each do |run| %>
+            <div class="recent-item">
+              <span class="activity-icon">
+                <%= run.source == 'strava' ? '🏃‍♂️' : '✏️' %>
+              </span>
+              <div class="activity-details">
+                <strong><%= run.user.full_name.present? ? run.user.full_name : run.user.username %></strong>
+                <span class="race-type-badge <%= run.race_type %>"><%= run.race_type.upcase %></span>
+                <span class="time"><%= format_time(run.time, run.race_type) %></span>
+              </div>
+              <span class="activity-date"><%= run.created_at.strftime('%m/%d') %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-state">No recent runs</p>
+      <% end %>
+    </div>
+
+    <div class="activity-section">
+      <h3>👤 Recent Users</h3>
+      <% if @recent_users.any? %>
+        <div class="recent-list">
+          <% @recent_users.each do |user| %>
+            <div class="recent-item">
+              <span class="activity-icon">👤</span>
+              <div class="activity-details">
+                <strong><%= user.full_name.present? ? user.full_name : user.username %></strong>
+                <span class="user-stats">
+                  <%= pluralize(user.runs.count, 'run') %>
+                </span>
+              </div>
+              <span class="activity-date"><%= user.created_at.strftime('%m/%d') %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-state">No recent users</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .admin-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .dashboard-header h1 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    color: #666;
+    font-size: 1.1rem;
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-color);
+    border-radius: 12px;
+    color: white;
+  }
+
+  .stat-content h3 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: bold;
+  }
+
+  .stat-content p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  /* Sync Section */
+  .sync-section {
+    margin-bottom: 3rem;
+  }
+
+  .section-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-header h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+  }
+
+  .sync-status-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .sync-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary-color);
+  }
+
+  .sync-status {
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .sync-status.success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .sync-status.error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .sync-status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .sync-time, .sync-result {
+    margin: 0.25rem 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .sync-actions {
+    text-align: center;
+  }
+
+  .sync-btn {
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .sync-note {
+    margin: 0;
+    color: #666;
+    font-size: 0.8rem;
+  }
+
+  /* Management Grid */
+  .management-grid {
+    margin-bottom: 3rem;
+  }
+
+  .management-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .management-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .management-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .management-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .management-card p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .card-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .card-stats .stat {
+    background: #f8f9fa;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  /* Recent Activity */
+  .recent-activity {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .activity-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .activity-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .recent-list {
+    space-y: 0.5rem;
+  }
+
+  .recent-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .recent-item:last-child {
+    border-bottom: none;
+  }
+
+  .activity-icon {
+    font-size: 1.2rem;
+  }
+
+  .activity-details {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .activity-details strong {
+    color: var(--primary-color);
+  }
+
+  .race-type-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+
+  .race-type-badge.5k {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  .race-type-badge.bronco {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+
+  .time {
+    font-family: monospace;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .user-stats {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .activity-date {
+    color: #999;
+    font-size: 0.8rem;
+    text-align: right;
+  }
+
+  .empty-state {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .admin-dashboard {
+      padding: 1rem;
+    }
+
+    .sync-status-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .management-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,4 +1,10 @@
 <h1>Edit Race Deadline</h1>
+
+<div class="admin-controls">
+  <%= link_to "← Back to Race Deadlines", admin_race_deadlines_path, class: "btn btn-secondary" %>
+  <%= link_to "← Back to Dashboard", admin_dashboard_path, class: "btn btn-outline-secondary" %>
+</div>
+
 <%= form_with model: [:admin, @race_deadline], local: true, class: "form-container" do |form| %>
   <div class="form-group">
     <%= form.label :race_type, "Race Type" %>

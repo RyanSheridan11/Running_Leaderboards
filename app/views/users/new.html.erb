@@ -1,43 +1,72 @@
-<h1>Sign Up</h1>
+<div class="form-container">
+  <h1>🏃 Sign Up</h1>
+  <p class="form-description">
+    Create your account to join the running leaderboard and track your progress.
+  </p>
 
-<%= form_with model: @user, url: users_path, local: true do |form| %>
-  <% if @user.errors.any? %>
-    <div class="errors">
-      <ul>
-        <% @user.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
+  <%= form_with model: @user, url: users_path, local: true, class: "signup-form" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="alert alert-error">
+        <h4><%= pluralize(@user.errors.count, "error") %> prevented this account from being created:</h4>
+        <ul>
+          <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :firstname, "First Name*" %>
+      <%= form.text_field :firstname, required: true, id: "user_firstname", class: "form-control", placeholder: "Enter your first name" %>
+      <small class="form-text">This will be used to generate your username</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :lastname, "Last Name*" %>
+      <%= form.text_field :lastname, required: true, id: "user_lastname", class: "form-control", placeholder: "Enter your last name" %>
+      <small class="form-text">This will be used to generate your username</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :username, "Username (auto-generated)" %>
+      <%= form.text_field :username, readonly: true, id: "user_username", class: "form-control username-display", placeholder: "Will be generated automatically" %>
+      <small class="form-text">Your username will be automatically created from your first name + last name initial</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :strava_username, "Strava Username (optional)" %>
+      <%= form.text_field :strava_username, class: "form-control", placeholder: "Your Strava username" %>
+      <small class="form-text">Connect your Strava account for automatic run syncing</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :password, "Password*" %>
+      <%= form.password_field :password, class: "form-control", placeholder: "Create a secure password" %>
+      <small class="form-text">Minimum 4 characters required</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :password_confirmation, "Confirm Password*" %>
+      <%= form.password_field :password_confirmation, class: "form-control", placeholder: "Re-enter your password" %>
+      <small class="form-text">Must match the password above</small>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Create Account", class: "btn btn-primary" %>
+      <%= link_to "Cancel", login_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
-  <div>
-    <%= form.label :firstname, "First Name" %><br>
-    <%= form.text_field :firstname, required: true, id: "user_firstname" %>
-  </div>
-  <div>
-    <%= form.label :lastname, "Last Name" %><br>
-    <%= form.text_field :lastname, required: true, id: "user_lastname" %>
-  </div>
-  <div>
-    <%= form.label :username, "Username (auto-generated)" %><br>
-    <%= form.text_field :username, readonly: true, id: "user_username", placeholder: "Will be generated automatically", style: "background-color: #f8f9fa; color: #6c757d;" %>
-  </div>
-  <div>
-    <%= form.label :strava_username, "Strava Username (optional)" %><br>
-    <%= form.text_field :strava_username, placeholder: "Your Strava username" %>
-  </div>
-  <div>
-    <%= form.label :password %><br>
-    <%= form.password_field :password %>
-  </div>
-  <div>
-    <%= form.label :password_confirmation %><br>
-    <%= form.password_field :password_confirmation %>
-  </div>
-  <div>
-    <%= form.submit "Sign Up" %>
-  </div>
-<% end %>
+</div>
+
+<div class="submission-info">
+  <h3>📋 Account Information</h3>
+  <ul>
+    <li>Your username will be automatically generated from your name</li>
+    <li>Connect your Strava account for automatic run syncing</li>
+    <li>All fields marked with * are required</li>
+  </ul>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -57,14 +86,14 @@ document.addEventListener('DOMContentLoaded', function() {
       if (cleanFirstname && cleanLastname) {
         const username = cleanFirstname + cleanLastname.charAt(0);
         usernameField.value = username;
-        usernameField.style.color = '#333';
+        usernameField.classList.remove('placeholder-text');
       } else {
         usernameField.value = '';
-        usernameField.style.color = '#6c757d';
+        usernameField.classList.add('placeholder-text');
       }
     } else {
       usernameField.value = '';
-      usernameField.style.color = '#6c757d';
+      usernameField.classList.add('placeholder-text');
     }
   }
 
@@ -74,6 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Generate initial username if fields are pre-filled
   generateUsername();
-});</script>
+});
+</script>
 
-<p>Already have an account? <%= link_to "Log in", login_path %></p>
+<p style="text-align: center; margin-top: 2rem;">
+  Already have an account? <%= link_to "Log in", login_path, class: "nav-link" %>
+</p>

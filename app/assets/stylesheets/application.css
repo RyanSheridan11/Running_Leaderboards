@@ -1677,116 +1677,87 @@ h3 {
   font-weight: 600;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .voting-container {
-    flex-direction: column;
-  }
-
-  .voting-sidebar {
-    flex: none;
-    max-height: none;
-  }
-
-  .play-card {
-    flex-direction: row !important;
-    text-align: left !important;
-  }
-
-  .play-rank {
-    margin-right: 0.75rem !important;
-    margin-bottom: 0 !important;
-  }
+/* User Authentication Forms */
+.signup-form .form-group,
+.login-form .form-group {
+  margin-bottom: 1.5rem;
 }
 
-@media (max-width: 768px) {
-  .plays-header {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-
-  .plays-actions {
-    justify-content: center;
-  }
-
-  .ranking-slot {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .rank-number {
-    margin-bottom: 0.5rem;
-  }
-
-  .voting-actions {
-    flex-direction: column;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
+.signup-form label,
+.login-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
 }
 
-/* Strava integration styles */
-.date-with-source {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.signup-form .form-control,
+.login-form .form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
-.rank-with-source {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.signup-form .form-control:focus,
+.login-form .form-control:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.race-type-with-source {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.username-display {
+  background-color: #f8f9fa !important;
+  color: #6c757d !important;
+  cursor: not-allowed;
 }
 
-.strava-username {
-  color: #666;
-  font-size: 0.9rem;
-  margin: 0.25rem 0 0 0;
+.username-display.placeholder-text {
+  color: #adb5bd !important;
   font-style: italic;
 }
 
-.strava-badge {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  cursor: help;
+/* Alert styles for forms */
+.alert {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
 }
 
-.strava-badge:hover {
-  opacity: 1;
+.alert-error {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
 }
 
-.strava-icon {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  cursor: help;
-  transition: opacity 0.2s ease;
+/* Password Form Styling */
+.password-form .form-group {
+  margin-bottom: 1.5rem;
 }
 
-.strava-icon:hover {
-  opacity: 1;
+.password-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
 }
 
-.source-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+.password-form .form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
-.source.strava {
-  color: #FC4C02;
-  font-weight: 500;
-}
-
-.source.manual {
-  color: #6c757d;
-  font-weight: 500;
+.password-form .form-control:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }

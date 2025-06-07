@@ -1,19 +1,39 @@
-<h1>Log In</h1>
+<div class="form-container">
+  <h1>🔐 Log In</h1>
+  <p class="form-description">
+    Welcome back! Sign in to access your running leaderboard account.
+  </p>
 
-<%= form_with url: login_path, local: true do |form| %>
-  <div>
-    <%= form.label :username %><br>
-    <%= form.text_field :username %>
-  </div>
-  <div>
-    <%= form.label :password %><br>
-    <%= form.password_field :password %>
-    <small style="display: block; color: #666; margin-top: 0.25rem;">
-      If this is your first time logging in, you may not need a password yet.
-    </small>
-  </div>
-  <div>
-    <%= form.submit "Log In" %>
-  </div>
-<% end %>
-<p>Don't have an account? <%= link_to "Sign up", new_user_path %></p>
+  <%= form_with url: login_path, local: true, class: "login-form" do |form| %>
+    <div class="form-group">
+      <%= form.label :username, "Username*" %>
+      <%= form.text_field :username, class: "form-control", placeholder: "Enter your username" %>
+      <small class="form-text">The username you created when signing up</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :password, "Password*" %>
+      <%= form.password_field :password, class: "form-control", placeholder: "Enter your password" %>
+      <small class="form-text">
+        If this is your first time logging in, you may not need a password yet.
+      </small>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Sign In", class: "btn btn-primary" %>
+      <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="submission-info">
+  <h3>📋 Need Help?</h3>
+  <ul>
+    <li>First time users may not need a password initially</li>
+    <li>Contact an admin if you're having trouble accessing your account</li>
+  </ul>
+</div>
+
+<p style="text-align: center; margin-top: 2rem;">
+  Don't have an account? <%= link_to "Sign up", new_user_path, class: "nav-link" %>
+</p>

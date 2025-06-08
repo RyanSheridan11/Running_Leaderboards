@@ -31,13 +31,7 @@
     <div class="form-group">
       <%= form.label :email, "Email Address*" %>
       <%= form.email_field :email, required: true, class: "form-control", placeholder: "Enter your email address" %>
-      <small class="form-text">This will be used to log in and for account notifications</small>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :strava_username, "Strava Username (optional)" %>
-      <%= form.text_field :strava_username, class: "form-control", placeholder: "Your Strava username" %>
-      <small class="form-text">Connect your Strava account for automatic run syncing</small>
+      <small class="form-text">This will be used to log in</small>
     </div>
 
     <div class="form-group">
@@ -62,8 +56,6 @@
 <div class="submission-info">
   <h3>📋 Account Information</h3>
   <ul>
-    <li>Use a valid email address for login and notifications</li>
-    <li>Connect your Strava account for automatic run syncing</li>
     <li>All fields marked with * are required</li>
   </ul>
 </div>

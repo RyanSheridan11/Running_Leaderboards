@@ -1,21 +1,21 @@
 <div class="form-container">
   <h1>🔐 Log In</h1>
   <p class="form-description">
-    Welcome back! Sign in to access your running leaderboard account.
+    Welcome! Sign in to access your running leaderboard account.
   </p>
 
   <%= form_with url: login_path, local: true, class: "login-form" do |form| %>
     <div class="form-group">
       <%= form.label :email, "Email*" %>
       <%= form.email_field :email, class: "form-control", placeholder: "Enter your email address" %>
-      <small class="form-text">The email address you used when signing up</small>
+      <small class="form-text">The email address Manager Mike is using to contact you</small>
     </div>
 
     <div class="form-group">
       <%= form.label :password, "Password*" %>
       <%= form.password_field :password, class: "form-control", placeholder: "Enter your password" %>
       <small class="form-text">
-        If this is your first time logging in, you may not need a password yet.
+        If this is your first time logging in, you dont need a password.
       </small>
     </div>
 
@@ -29,11 +29,11 @@
 <div class="submission-info">
   <h3>📋 Need Help?</h3>
   <ul>
-    <li>First time users may not need a password initially</li>
-    <li>Contact an admin if you're having trouble accessing your account</li>
+    <li>If you havent logged in before you dont need a password</li>
+    <li>Ask Ryan if you cant remember your password/email or any issues</li>
   </ul>
 </div>
 
 <p style="text-align: center; margin-top: 2rem;">
-  Don't have an account? <%= link_to "Sign up", new_user_path, class: "nav-link" %>
+  Don't have an account? <%= link_to "Sign up", new_user_path, class: "btn btn-secondary" %>
 </p>

@@ -140,6 +140,15 @@
                         disable_with: "🔄 Syncing..."
                       } %>
         <p class="sync-note">Fetches recent 5K runs from the Strava club</p>
+        
+        <%= button_to "📅 Backdate Strava", admin_dashboard_backdate_sync_path,
+                      method: :post,
+                      class: "btn btn-secondary sync-btn",
+                      data: {
+                        confirm: "This will fetch the last 100 activities from Strava for backdating. This may take longer. Continue?",
+                        disable_with: "📅 Backdating..."
+                      } %>
+        <p class="sync-note">Fetches up to 100 recent activities for comprehensive sync</p>
       </div>
     </div>
   </div>
@@ -210,7 +219,7 @@
                 <%= run.source == 'strava' ? '🏃‍♂️' : '✏️' %>
               </span>
               <div class="activity-details">
-                <strong><%= run.user.full_name.present? ? run.user.full_name : run.user.username %></strong>
+                <strong><%= run.user.full_name %></strong>
                 <span class="race-type-badge <%= run.race_type %>"><%= run.race_type.upcase %></span>
                 <span class="time"><%= format_time(run.time, run.race_type) %></span>
               </div>
@@ -231,7 +240,7 @@
             <div class="recent-item">
               <span class="activity-icon">👤</span>
               <div class="activity-details">
-                <strong><%= user.full_name.present? ? user.full_name : user.username %></strong>
+                <strong><%= user.full_name %></strong>
                 <span class="user-stats">
                   <%= pluralize(user.runs.count, 'run') %>
                 </span>
@@ -386,13 +395,16 @@
   .sync-btn {
     font-size: 1.1rem;
     padding: 0.75rem 1.5rem;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem;
+    display: inline-block;
+    min-width: 200px;
   }
 
   .sync-note {
-    margin: 0;
+    margin: 0.25rem 0 1rem 0;
     color: #666;
     font-size: 0.8rem;
+    display: block;
   }
 
   /* Management Grid */

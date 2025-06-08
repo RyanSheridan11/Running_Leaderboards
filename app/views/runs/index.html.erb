@@ -37,7 +37,7 @@
               </div>
             </td>
             <td>
-              <% name = run.user.full_name.present? ? run.user.full_name : run.user.username %>
+              <% name = run.user.full_name %>
               <% if (admin? || run.user == current_user) %>
                 <%= link_to name, user_path(run.user), class: "user-link" %>
               <% else %>
@@ -92,7 +92,7 @@
               </div>
             </td>
             <td>
-              <% name = run.user.full_name.present? ? run.user.full_name : run.user.username %>
+              <% name = run.user.full_name %>
               <% if admin? || run.user == current_user %>
                 <%= link_to name, user_path(run.user), class: "user-link" %>
               <% else %>
@@ -158,7 +158,7 @@
           </div>
           <div class="play-content">
             <h3><%= play.title %></h3>
-            <p>by <%= play.user.username %></p>
+            <p>by <%= play.user.full_name %></p>
             <% if play.video_url.present? %>
               <p><a href="<%= play.video_url %>" target="_blank" rel="noopener">Watch Video</a></p>
             <% end %>
@@ -180,7 +180,7 @@
           <div class="play-option" style="padding:1rem; border:1px solid #ccc; border-radius:8px;">
             <h4><%= play.title %></h4>
             <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
-            <p><strong>By:</strong> <%= play.user.username %></p>
+            <p><strong>By:</strong> <%= play.user.full_name %></p>
             <p><strong>ELO:</strong> <%= play.elo %></p>
             <% if play.video_url.present? %>
               <p><a href="<%= play.video_url %>" target="_blank" rel="noopener">Watch Video</a></p>

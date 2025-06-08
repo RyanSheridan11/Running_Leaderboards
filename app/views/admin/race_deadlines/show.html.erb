@@ -66,7 +66,7 @@
             <% best_run = user.runs.where(race_type: @race_deadline.race_type).order(:time).first %>
             <% latest_run = user.runs.where(race_type: @race_deadline.race_type).order(created_at: :desc).first %>
             <tr>
-              <td><%= link_to (user.full_name.present? ? user.full_name : user.username), user_path(user), class: "user-link" %></td>
+              <td><%= link_to user.full_name, user_path(user), class: "user-link" %></td>
               <td><%= format_time(best_run.time, @race_deadline.race_type) if best_run %></td>
               <td><%= user.runs.where(race_type: @race_deadline.race_type).count %></td>
               <td><%= latest_run.created_at.strftime("%B %d, %Y") if latest_run %></td>
@@ -102,7 +102,7 @@
         <tbody>
           <% @users_without_submissions.each do |user| %>
             <tr>
-              <td><%= link_to (user.full_name.present? ? user.full_name : user.username), user_path(user), class: "user-link" %></td>
+              <td><%= link_to user.full_name, user_path(user), class: "user-link" %></td>
               <td><%= user.created_at.strftime("%B %d, %Y") %></td>
               <td><%= user.runs.count %></td>
               <td>

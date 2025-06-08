@@ -57,4 +57,34 @@ class Admin::DashboardController < ApplicationController
       redirect_to admin_dashboard_path, alert: "Strava sync failed: #{e.message}"
     end
   end
+
+  def trigger_backdate_strava_sync
+    begin
+      # Start the sync job with higher per_page for backdating
+      StravaSyncJob.perform_now(per_page: 100)
+
+      # Get the sync data from cache to provide detailed feedback
+      sync_data = Rails.cache.read("last_strava_sync_data")
+
+      if sync_data && !sync_data[:error]
+        result_message = "Backdate sync: Found #{sync_data[:total_activities]} activities, processed #{sync_data[:processed_activities]} eligible 5k runs, created #{sync_data[:created_runs]} new runs"
+      else
+        result_message = sync_data && sync_data[:error] ? "Error: #{sync_data[:error]}" : "Backdate sync completed"
+      end
+
+      # Track sync result
+      session[:last_strava_sync_status] = "Backdate completed successfully"
+      session[:last_strava_sync_time] = Time.current.to_s
+      session[:last_strava_sync_result] = result_message
+
+      redirect_to admin_dashboard_path, notice: "Strava backdate sync completed successfully! #{result_message}"
+    rescue => e
+      # Track sync error
+      session[:last_strava_sync_status] = "Backdate failed"
+      session[:last_strava_sync_time] = Time.current.to_s
+      session[:last_strava_sync_result] = "Error: #{e.message}"
+
+      redirect_to admin_dashboard_path, alert: "Strava backdate sync failed: #{e.message}"
+    end
+  end
 end

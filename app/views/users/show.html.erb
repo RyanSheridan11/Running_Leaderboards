@@ -1,6 +1,6 @@
 <div class="profile-header">
   <h1>
-    <%= @user.full_name.present? ? @user.full_name : @user.username %>'s Profile
+    <%= @user.full_name %>'s Profile
   </h1>
   <% if @user.strava_username.present? %>
     <p class="strava-username">🏃‍♂️ <%= @user.strava_username %></p>
@@ -40,7 +40,7 @@
 </div>
 
 <div class="runs-section">
-  <h2><%= @user.username %>'s Runs</h2>
+  <h2><%= @user.full_name %>'s Runs</h2>
 
   <% if @runs.any? %>
     <div class="table-container">
@@ -74,7 +74,7 @@
     </div>
   <% else %>
     <div class="empty-state">
-      <p><%= @user.username %> hasn't recorded any runs yet.</p>
+      <p><%= @user.full_name %> hasn't recorded any runs yet.</p>
     </div>
   <% end %>
 </div>

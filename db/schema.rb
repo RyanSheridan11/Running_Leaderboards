@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_07_062224) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_08_062750) do
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.date "start_date"
@@ -67,7 +67,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_062224) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -76,7 +75,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_062224) do
     t.string "firstname"
     t.string "lastname"
     t.string "strava_username"
-    t.index "LOWER(username)", name: "index_users_on_lower_username", unique: true
+    t.string "email"
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["strava_athlete_id"], name: "index_users_on_strava_athlete_id", unique: true
   end
 

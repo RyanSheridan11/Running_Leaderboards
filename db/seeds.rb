@@ -44,8 +44,8 @@ Event.find_or_create_by!(name: 'World Champs') do |event|
 end
 
 # Create admin users if not exists
-# Note: usernames are case-insensitive and will be normalized to lowercase
-User.find_or_create_by!(username: "ryans".downcase) do |user|
+# Note: emails are case-insensitive and will be normalized to lowercase
+User.find_or_create_by!(email: "ryansheridan11@gmail.com".downcase) do |user|
   user.firstname = "Ryan"
   user.lastname = "Sheridan"
   user.password = "1234"
@@ -53,7 +53,7 @@ User.find_or_create_by!(username: "ryans".downcase) do |user|
   user.admin = true
 end
 
-User.find_or_create_by!(username: "nickb".downcase) do |user|
+User.find_or_create_by!(email: "nick.bielby21@gmail.com".downcase) do |user|
   user.firstname = "Nick"
   user.lastname = "Bielby"
   user.strava_username = "nickb"
@@ -61,70 +61,58 @@ User.find_or_create_by!(username: "nickb".downcase) do |user|
   user.admin = true
 end
 
-# rails runner "puts 'Ryan user id: ' + (User.find_by(username: 'ryans')&.id ).to_s"
 
 # Create regular users without passwords
 users_data = [
-  [ "Alex", "Dewhurst" ],
-  [ "Andrew", "van Gemst" ],
-  [ "Andrew", "Snijders" ],
-  [ "Andy", "Huang" ],
-  [ "Benjamin", "Coubrough" ],
-  [ "Ben", "McLanahan" ],
-  [ "Billy", "Maui" ],
-  [ "Bryan", "Daniels-Fok" ],
-  [ "Charlie", "Ellis" ],
-  [ "Cooper", "McCone" ],
-  [ "Darren", "Leishman" ],
-  [ "Elliot", "Stephenson" ],
-  [ "Finlay", "Armstrong" ],
-  [ "Gatsby", "Cohen" ],
-  [ "Harrison", "Coubrough" ],
-  [ "Havik", "Ford" ],
-  [ "Hunter", "Kao" ],
-  [ "Jacob", "Martin" ],
-  [ "James", "Bowen" ],
-  [ "James", "Ogilvie" ],
-  [ "Jamie", "Love" ],
-  [ "Josh", "Jack" ],
-  [ "Joshua", "Lee" ],
-  [ "Lachlan", "Brill" ],
-  [ "Luke", "Dillon-Price" ],
-  [ "Luke", "Dowle" ],
-  [ "Malachi", "Symons" ],
-  [ "Matthew", "Connelly" ],
-  [ "Michael", "James" ],
-  [ "Nathan", "Davies" ],
-  [ "Noah", "Wood" ],
-  [ "Oakley", "Cowie" ],
-  [ "Oli", "Pitts" ],
-  [ "Ollie", "Pugh" ],
-  [ "Ori", "Hoskin" ],
-  [ "Rasmus", "Hunt" ],
-  [ "Rian", "Caffrey" ],
-  [ "Ridhwan", "Singh" ],
-  [ "River", "Read - Smith" ],
-  [ "Samuel", "Worsley" ],
-  [ "Sebastian", "Strydom" ],
-  [ "Toby", "Connor-Kebbell" ],
-  [ "Troy", "Craddock" ],
-  [ "Victor", "Stanley" ],
-  [ "Vinay", "Varadarajan" ]
+  [ "Alex", "Dewhurst", "alexdewy10@gmail.com" ],
+  [ "Andrew", "van Gemst", "andvangemst@gmail.com" ],
+  [ "Andrew", "Snijders", "asnijders34@gmail.com" ],
+  [ "Andy", "Huang", "andyboyuh9@gmail.com" ],
+  [ "Benjamin", "Coubrough", "coubroughbenjamin@gmail.com" ],
+  [ "Ben", "McLanahan", "ben@mclanahan.nz" ],
+  [ "Billy", "Maui", "billymaui07@gmail.com" ],
+  [ "Bryan", "Daniels-Fok", "kevinmfok@gmail.com" ],
+  [ "Charlie", "Ellis", "sencharlie0@gmail.com" ],
+  [ "Cooper", "McCone", "coopermccone@gmail.com" ],
+  [ "Darren", "Leishman", "darren.leishman9@gmail.com" ],
+  [ "Elliot", "Stephenson", "es23040@my.westlake.school.nz" ],
+  [ "Finlay", "Armstrong", "finlayarmstrong09@gmail.com" ],
+  [ "Gatsby", "Cohen", "gatsby.cohen@gmail.com" ],
+  [ "Harrison", "Coubrough", "coubroughharris@gmail.com" ],
+  [ "Havik", "Ford", "Paubroankids@gmail.com" ],
+  [ "Hunter", "Kao", "hunterkao789@gmail.com" ],
+  [ "Jacob", "Martin", "jacobmartin.tepuke@gmail.com" ],
+  [ "James", "Bowen", "jameslucasbowen@icloud.com" ],
+  [ "James", "Ogilvie", "brett.ogilvie@gmail.com" ],
+  [ "Jamie", "Love", "ruthlove2176@gmail.com" ],
+  [ "Josh", "Jack", "joshjacknz@gmail.com" ],
+  [ "Joshua", "Lee", "joshua20090303@gmail.com" ],
+  [ "Lachlan", "Brill", "lachlanb.nz@gmail.com" ],
+  [ "Luke", "Dillon-Price", "Lukedp500@gmail.com" ],
+  [ "Luke", "Dowle", "lukedowle88@gmail.com" ],
+  [ "Malachi", "Symons", "joelsymons@gmail.com" ],
+  [ "Matthew", "Connelly", "matthew.connelly@fdmc.school.nz" ],
+  [ "Michael", "James", "michaeloj21@gmail.com" ],
+  [ "Nathan", "Davies", "sharonandjon@hotmail.com" ],
+  [ "Noah", "Wood", "woodn6258@gmail.com" ],
+  [ "Oakley", "Cowie", "oakley.cowie@example.com" ],
+  [ "Oli", "Pitts", "oliverpitts2019@gmail.com" ],
+  [ "Ollie", "Pugh", "oliver.k.pugh@gmail.com" ],
+  [ "Ori", "Hoskin", "ori.hoskin@gmail.com" ],
+  [ "Rasmus", "Hunt", "rasmus.tariki@gmail.com" ],
+  [ "Rian", "Caffrey", "rian.caffrey@gmail.com" ],
+  [ "Ridhwan", "Singh", "ridhwansingh9@gmail.com" ],
+  [ "River", "Read - Smith", "rrrreadsmith@gmail.com" ],
+  [ "Samuel", "Worsley", "Lewisworsley@gmail.com" ],
+  [ "Sebastian", "Strydom", "stephstrydom@gmail.com" ],
+  [ "Toby", "Connor-Kebbell", "toby_ck@icloud.com" ],
+  [ "Troy", "Craddock", "troycraddock12@gmail.com" ],
+  [ "Victor", "Stanley", "sarastanley8@icloud.com" ],
+  [ "Vinay", "Varadarajan", "kavi98@gmail.com" ]
 ]
 
-users_data.each do |firstname, lastname|
-  # Generate username from firstname + first letter of lastname
-  base_username = "#{firstname.downcase.gsub(/[^a-z0-9]/, '')}#{lastname.first.downcase}"
-
-  # Handle special cases for duplicate names
-  candidate = base_username
-  counter = 1
-  while User.exists?(username: candidate)
-    candidate = "#{base_username}#{counter}"
-    counter += 1
-  end
-
-  User.find_or_create_by!(username: candidate) do |user|
+users_data.each do |firstname, lastname, email|
+  User.find_or_create_by!(email: email.downcase) do |user|
     user.firstname = firstname
     user.lastname = lastname
     user.admin = false
@@ -134,6 +122,6 @@ end
 
 puts "Seed data created successfully!"
 puts "Created #{User.count} users total"
-puts "Admin users: username='ryans', password='1234'"
-puts "           : username='nickb', password='1234'"
+puts "Admin users: email='ryan@sheridan.kiwi.nz', password='1234'"
+puts "           : email='nick@example.com', password='1234'"
 puts "Regular users: No password set - will be prompted to create password on first login"

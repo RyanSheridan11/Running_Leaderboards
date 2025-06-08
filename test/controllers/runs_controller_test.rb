@@ -5,7 +5,7 @@ class RunsControllerTest < ActionDispatch::IntegrationTest
     @admin = User.create!(
       firstname: "Admin",
       lastname: "User",
-      username: "admin_main",
+      email: "admin_main@test.com",
       password: "password123",
       password_confirmation: "password123",
       admin: true
@@ -14,7 +14,7 @@ class RunsControllerTest < ActionDispatch::IntegrationTest
     @regular_user = User.create!(
       firstname: "Regular",
       lastname: "User",
-      username: "regular_main",
+      email: "regular_main@test.com",
       password: "password123",
       password_confirmation: "password123"
     )
@@ -22,7 +22,7 @@ class RunsControllerTest < ActionDispatch::IntegrationTest
     @other_user = User.create!(
       firstname: "Other",
       lastname: "User",
-      username: "other_main",
+      email: "other_main@test.com",
       password: "password123",
       password_confirmation: "password123"
     )
@@ -81,6 +81,6 @@ class RunsControllerTest < ActionDispatch::IntegrationTest
   private
 
   def log_in(user)
-    post login_path, params: { username: user.username, password: "password123" }
+    post login_path, params: { email: user.email, password: "password123" }
   end
 end

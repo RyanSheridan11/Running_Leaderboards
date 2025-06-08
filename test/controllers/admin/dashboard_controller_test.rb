@@ -5,7 +5,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     @admin = User.create!(
       firstname: "Admin",
       lastname: "User",
-      username: "admin",
+      email: "admin@test.com",
       password: "password123",
       password_confirmation: "password123",
       admin: true
@@ -14,7 +14,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     @regular_user = User.create!(
       firstname: "Regular",
       lastname: "User",
-      username: "user",
+      email: "user@test.com",
       password: "password123",
       password_confirmation: "password123"
     )
@@ -66,14 +66,14 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect to root when not admin" do
-    post login_path, params: { username: @regular_user.username, password: "password123" }
+    post login_path, params: { email: @regular_user.email, password: "password123" }
     get admin_dashboard_path
     assert_redirected_to root_path
     assert_equal "You must be an admin to access this section.", flash[:alert]
   end
 
   test "should show dashboard when admin" do
-    post login_path, params: { username: @admin.username, password: "password123" }
+    post login_path, params: { email: @admin.email, password: "password123" }
     get admin_dashboard_path
 
     assert_response :success
@@ -90,7 +90,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show management links" do
-    post login_path, params: { username: @admin.username, password: "password123" }
+    post login_path, params: { email: @admin.email, password: "password123" }
     get admin_dashboard_path
 
     assert_response :success
@@ -101,7 +101,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show strava sync section" do
-    post login_path, params: { username: @admin.username, password: "password123" }
+    post login_path, params: { email: @admin.email, password: "password123" }
     get admin_dashboard_path
 
     assert_response :success
@@ -110,7 +110,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show recent activity" do
-    post login_path, params: { username: @admin.username, password: "password123" }
+    post login_path, params: { email: @admin.email, password: "password123" }
     get admin_dashboard_path
 
     assert_response :success
@@ -120,7 +120,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should handle strava sync trigger" do
-    post login_path, params: { username: @admin.username, password: "password123" }
+    post login_path, params: { email: @admin.email, password: "password123" }
 
     # Store sample sync data in cache for testing
     Rails.cache.write("last_strava_sync_data", {
@@ -142,7 +142,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should handle strava sync errors" do
-    post login_path, params: { username: @admin.username, password: "password123" }
+    post login_path, params: { email: @admin.email, password: "password123" }
 
     # Override StravaSyncJob.perform_now to raise an error for this test
     StravaSyncJob.define_singleton_method(:perform_now) { raise StandardError.new("API Error") }

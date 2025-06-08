@@ -120,7 +120,7 @@ class StravaSyncJob < ApplicationJob
     end
 
     if existing_run
-      Rails.logger.info "Skipping duplicate run for user #{user.username} on #{activity_date} - existing time: #{existing_run.time}s, new time: #{activity_time}s"
+      Rails.logger.info "Skipping duplicate run for user #{user.email} on #{activity_date} - existing time: #{existing_run.time}s, new time: #{activity_time}s"
       return false
     end
 
@@ -136,10 +136,10 @@ class StravaSyncJob < ApplicationJob
     run = Run.new(run_data)
 
     if run.save
-      Rails.logger.info "Created run for user #{user.username}: #{run.time}s on #{run.date}"
+      Rails.logger.info "Created run for user #{user.email}: #{run.time}s on #{run.date}"
       true
     else
-      Rails.logger.error "Failed to save run for user #{user.username}: #{run.errors.full_messages}"
+      Rails.logger.error "Failed to save run for user #{user.email}: #{run.errors.full_messages}"
       false
     end
   end

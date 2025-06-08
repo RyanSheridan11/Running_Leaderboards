@@ -37,7 +37,7 @@
             </div>
           </td>
           <td>
-            <%= link_to (run.user.full_name.present? ? run.user.full_name : run.user.username), user_path(run.user), class: "user-link" %>
+            <%= link_to (run.user.full_name.present? ? run.user.full_name : run.user.email), user_path(run.user), class: "user-link" %>
           </td>
           <td>
             <span class="race-type-badge <%= run.race_type %>">

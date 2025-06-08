@@ -1,49 +1,49 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 test_user_one:
-  username: testuser1
+  email: testuser1@example.com
   firstname: Test
   lastname: User One
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
 test_user_two:
-  username: testuser2
+  email: testuser2@example.com
   firstname: Test
   lastname: User Two
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
 test_user_three:
-  username: testuser3
+  email: testuser3@example.com
   firstname: Test
   lastname: User Three
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
 test_user_four:
-  username: testuser4
+  email: testuser4@example.com
   firstname: Test
   lastname: User Four
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
 test_user_five:
-  username: testuser5
+  email: testuser5@example.com
   firstname: Test
   lastname: User Five
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: false
 
 test_admin_user:
-  username: testadmin
+  email: testadmin@example.com
   firstname: Test
   lastname: Admin
   password_digest: <%= BCrypt::Password.create('password') %>
   admin: true
 
 test_user_with_strava:
-  username: teststrava
+  email: teststrava@example.com
   firstname: Test
   lastname: Strava User
   strava_username: test_strava
@@ -51,7 +51,7 @@ test_user_with_strava:
   admin: false
 
 test_user_runner:
-  username: testrunner
+  email: testrunner@example.com
   firstname: Test
   lastname: Runner
   strava_username: test_runner
@@ -59,7 +59,7 @@ test_user_runner:
   admin: false
 
 test_user_athlete:
-  username: testathlete
+  email: testathlete@example.com
   firstname: Test
   lastname: Athlete
   strava_username: test_athlete
@@ -67,7 +67,7 @@ test_user_athlete:
   admin: false
 
 test_user_competitor:
-  username: testcompetitor
+  email: testcompetitor@example.com
   firstname: Test
   lastname: Competitor
   strava_username: test_competitor
@@ -75,7 +75,7 @@ test_user_competitor:
   admin: false
 
 test_user_player:
-  username: testplayer
+  email: testplayer@example.com
   firstname: Test
   lastname: Player
   strava_username: test_player

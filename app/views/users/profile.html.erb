@@ -1,6 +1,6 @@
 <div class="profile-header">
   <h1>
-    <%= @user.full_name.present? ? @user.full_name : @user.username %>'s Profile
+    <%= @user.full_name %>'s Profile
   </h1>
   <% if @user.strava_username.present? %>
     <p class="strava-username">🏃‍♂️ <%= @user.strava_username %></p>

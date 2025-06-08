@@ -6,7 +6,7 @@ class StravaSyncJobTest < ActiveJob::TestCase
     @user1 = User.create!(
       firstname: "Benjamin",
       lastname: "Cooper",
-      username: "benjaminc",
+      email: "benjaminc@test.com",
       password: "password123",
       password_confirmation: "password123"
     )
@@ -14,7 +14,7 @@ class StravaSyncJobTest < ActiveJob::TestCase
     @user2 = User.create!(
       firstname: "Sarah",
       lastname: "Johnson",
-      username: "sarahj",
+      email: "sarahj@test.com",
       password: "password123",
       password_confirmation: "password123",
       strava_username: "Sarah J."
@@ -23,7 +23,7 @@ class StravaSyncJobTest < ActiveJob::TestCase
     @user3 = User.create!(
       firstname: "Mike",
       lastname: "Davis",
-      username: "miked",
+      email: "miked@test.com",
       password: "password123",
       password_confirmation: "password123",
       strava_athlete_id: "12345678"

@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get "dashboard", to: "dashboard#index"
     post "dashboard/sync", to: "dashboard#trigger_strava_sync", as: :dashboard_sync
+    post "dashboard/backdate-sync", to: "dashboard#trigger_backdate_strava_sync", as: :dashboard_backdate_sync
 
     resources :runs, only: [ :index, :edit, :update, :destroy ]
     resources :users, only: [ :index ]

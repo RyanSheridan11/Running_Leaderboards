@@ -25,7 +25,7 @@
             </div>
 
             <div class="play-content">
-              <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Submitted by:</strong> <%= play.user.firstname %></p>
               <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
               <p><strong>Date:</strong> <%= play.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
               <p><strong>Description:</strong></p>
@@ -79,7 +79,7 @@
             </div>
 
             <div class="play-content">
-              <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Submitted by:</strong> <%= play.user.email %></p>
               <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
               <p><strong>Approved:</strong> <%= play.updated_at.strftime("%B %d, %Y") %></p>
 
@@ -127,7 +127,7 @@
             </div>
 
             <div class="play-content">
-              <p><strong>Submitted by:</strong> <%= play.user.username %></p>
+              <p><strong>Submitted by:</strong> <%= play.user.email %></p>
               <p><strong>Event:</strong> <%= play.event&.name || 'N/A' %></p>
               <p><strong>Rejected:</strong> <%= play.updated_at.strftime("%B %d, %Y") %></p>
 

@@ -818,6 +818,28 @@ label {
 }
 
 /* ========================================
+   Run Source Icons
+   ======================================== */
+.rank-with-source {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.strava-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.manual-run-icon {
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ========================================
    Responsive Design
    ======================================== */
 @media (max-width: 1200px) {

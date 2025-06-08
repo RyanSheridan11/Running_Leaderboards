@@ -32,7 +32,9 @@
               <div class="rank-with-source">
                 <%= index + 1 %>
                 <% if run.from_strava? %>
-                  <span class="strava-icon" title="Synced from Strava">🏃‍♂️</span>
+                  <%= image_tag "strava.svg", class: "strava-icon", alt: "Strava", title: "Synced from Strava" %>
+                <% else %>
+                  <span class="manual-run-icon" title="Manual Entry">🏃‍♂️</span>
                 <% end %>
               </div>
             </td>
@@ -86,9 +88,6 @@
             <td>
               <div class="rank-with-source">
                 <%= index + 1 %>
-                <% if run.from_strava? %>
-                  <span class="strava-icon" title="Synced from Strava">🏃‍♂️</span>
-                <% end %>
               </div>
             </td>
             <td>

@@ -15,7 +15,7 @@ class RaceDeadline < ApplicationRecord
   end
 
   def users_with_submissions
-    User.joins(:runs).where(runs: { race_type: race_type, date: (Date.current - 1.year)..Date.current }).distinct
+    User.joins(:runs).where(runs: { race_type: race_type, date: start_date..due_date }).distinct
   end
 
   def users_without_submissions

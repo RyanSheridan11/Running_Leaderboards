@@ -48,7 +48,6 @@ rails db:seed
 
 You'll need 2 credential files:
 - config/master.key with the rails key thing
-Create a `.env` file or configure environment variables for:
 - config/kamal_registry_password.key
 - I've also loaded all the strava token details into rails credentials
 

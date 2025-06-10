@@ -108,19 +108,25 @@ class StravaSyncJob < ApplicationJob
       activity_date = Date.today
     end
     activity_time = StravaService.convert_time_to_seconds(activity["moving_time"])
+    activity_distance = activity["distance"].to_f
 
-    # Check for duplicate runs on the same day with similar time (within 30 seconds)
-    # and distance (5k runs should be between 4.5k and 5.5k)
-    existing_run = user.runs.where(
-      date: activity_date,
-      race_type: "5k"
-    ).find do |run|
-      # Check if times are within 30 seconds of each other
-      (run.time - activity_time).abs <= 30
+    # Check for duplicate runs with similar time (within 3 seconds) and distance (within 100m)
+    # Focus on Strava runs first, then manual runs
+    existing_run = user.runs.where(race_type: "5k").find do |run|
+      time_match = (run.time - activity_time).abs <= 3
+
+      if run.from_strava? && run.strava_distance.present?
+        # For Strava runs, check both time and distance
+        distance_match = (run.strava_distance - activity_distance).abs <= 100
+        time_match && distance_match
+      else
+        # For manual runs, only check time
+        time_match
+      end
     end
 
     if existing_run
-      Rails.logger.info "Skipping duplicate run for user #{user.email} on #{activity_date} - existing time: #{existing_run.time}s, new time: #{activity_time}s"
+      Rails.logger.info "Skipping duplicate run for user #{user.email} - existing: #{existing_run.time}s/#{existing_run.strava_distance}m, new: #{activity_time}s/#{activity_distance}m"
       return false
     end
 
@@ -130,7 +136,8 @@ class StravaSyncJob < ApplicationJob
       date: activity_date,
       time: activity_time,
       race_type: "5k",
-      source: "strava"
+      source: "strava",
+      strava_distance: activity_distance
     }
 
     run = Run.new(run_data)

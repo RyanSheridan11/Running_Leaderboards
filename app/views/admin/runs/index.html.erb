@@ -22,6 +22,7 @@
         <th>Time</th>
         <th>Date</th>
         <th>Source</th>
+        <th>Strava Distance</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -56,6 +57,15 @@
                 </span>
               <% end %>
             </div>
+          </td>
+          <td>
+            <% if run.strava_distance.present? %>
+              <span class="distance-badge">
+                <%= number_with_precision(run.strava_distance, precision: 0) %>m
+              </span>
+            <% else %>
+              <span class="no-distance">—</span>
+            <% end %>
           </td>
           <td>
             <%= link_to "Edit", edit_admin_run_path(run),
@@ -121,5 +131,19 @@
     text-align: center;
     padding: 2rem;
     color: #666;
+  }
+
+  .distance-badge {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .no-distance {
+    color: #999;
+    font-style: italic;
   }
 </style>

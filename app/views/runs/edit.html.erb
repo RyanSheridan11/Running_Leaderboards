@@ -19,9 +19,9 @@
     <% if admin? %>
       <div class="form-group">
         <%= form.label :user_id, "Runner*" %>
-        <%= form.select :user_id, 
-            options_for_select(User.order(:firstname, :lastname).map { |u| [u.full_name, u.id] }, @run.user_id), 
-            {}, 
+        <%= form.select :user_id,
+            options_for_select(User.order(:firstname, :lastname).map { |u| [u.full_name, u.id] }, @run.user_id),
+            {},
             { class: "form-control" } %>
         <small class="form-text">Select the runner for this run</small>
       </div>
@@ -44,6 +44,14 @@
       <%= form.text_field :time, value: format_time(@run.time, @run.race_type), id: "time_input", class: "form-control" %>
       <small class="form-text" id="time_help">Format: <%= @run.race_type == 'bronco' ? 'm:ss for Bronco' : 'mm:ss for 5k' %></small>
     </div>
+
+    <% if admin? && @run.from_strava? %>
+      <div class="form-group">
+        <%= form.label :strava_distance, "Strava Distance (meters)" %>
+        <%= form.number_field :strava_distance, step: 0.1, class: "form-control", placeholder: "Distance in meters from Strava" %>
+        <small class="form-text">Distance data from Strava API (used for duplicate detection)</small>
+      </div>
+    <% end %>
 
     <div class="form-actions">
       <%= form.submit "Update Run", class: "btn btn-primary" %>

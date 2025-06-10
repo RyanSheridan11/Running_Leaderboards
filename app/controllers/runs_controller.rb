@@ -33,7 +33,7 @@ class RunsController < ApplicationController
     else
       @run = current_user.runs.build(run_params)
     end
-    
+
     race_type = params[:run][:race_type] || "5k"
     time_in_seconds = convert_time_to_seconds(params[:run][:time], race_type)
     @run.source = "manual"
@@ -135,7 +135,7 @@ class RunsController < ApplicationController
 
   def run_params
     if current_user&.admin?
-      params.require(:run).permit(:date, :race_type, :user_id)
+      params.require(:run).permit(:date, :race_type, :user_id, :strava_distance)
     else
       params.require(:run).permit(:date, :race_type)
     end

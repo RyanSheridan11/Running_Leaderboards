@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_08_062750) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_065118) do
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.date "start_date"
@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_062750) do
     t.datetime "updated_at", null: false
     t.string "race_type", default: "5k", null: false
     t.string "source"
+    t.float "strava_distance"
     t.index ["user_id"], name: "index_runs_on_user_id"
   end
 
@@ -76,6 +77,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_062750) do
     t.string "lastname"
     t.string "strava_username"
     t.string "email"
+    t.datetime "last_login_at"
+    t.integer "login_count", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["strava_athlete_id"], name: "index_users_on_strava_athlete_id", unique: true
   end

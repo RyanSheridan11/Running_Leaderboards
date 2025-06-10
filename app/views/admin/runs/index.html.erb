@@ -3,13 +3,25 @@
 <div class="admin-controls">
   <%= link_to "← Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
 
-  <%= link_to "All Runs", admin_runs_path, class: "btn btn-secondary #{'active' if params[:race_type].blank?}" %>
-  <%= link_to "5k Runs", admin_runs_path(race_type: "5k"), class: "btn btn-secondary #{'active' if params[:race_type] == '5k'}" %>
-  <%= link_to "Bronco Runs", admin_runs_path(race_type: "bronco"), class: "btn btn-secondary #{'active' if params[:race_type] == 'bronco'}" %>
+  <div class="filter-group">
+    <strong>Race Type:</strong>
+    <%= link_to "All Runs", admin_runs_path(source: params[:source]), class: "btn btn-secondary #{'active' if params[:race_type].blank?}" %>
+    <%= link_to "5k Runs", admin_runs_path(race_type: "5k", source: params[:source]), class: "btn btn-secondary #{'active' if params[:race_type] == '5k'}" %>
+    <%= link_to "Bronco Runs", admin_runs_path(race_type: "bronco", source: params[:source]), class: "btn btn-secondary #{'active' if params[:race_type] == 'bronco'}" %>
+  </div>
 
-  <%= link_to "Manage Users", admin_users_path, class: "btn btn-outline-primary" %>
-  <%= link_to "Race Deadlines", admin_race_deadlines_path, class: "btn btn-outline-primary" %>
-  <%= link_to "Manage Plays", admin_plays_path, class: "btn btn-outline-primary" %>
+  <div class="filter-group">
+    <strong>Source:</strong>
+    <%= link_to "All Sources", admin_runs_path(race_type: params[:race_type]), class: "btn btn-secondary #{'active' if params[:source].blank?}" %>
+    <%= link_to "Strava", admin_runs_path(race_type: params[:race_type], source: "strava"), class: "btn btn-secondary #{'active' if params[:source] == 'strava'}" %>
+    <%= link_to "Manual", admin_runs_path(race_type: params[:race_type], source: "manual"), class: "btn btn-secondary #{'active' if params[:source] == 'manual'}" %>
+  </div>
+
+  <div class="admin-nav">
+    <%= link_to "Manage Users", admin_users_path, class: "btn btn-outline-primary" %>
+    <%= link_to "Race Deadlines", admin_race_deadlines_path, class: "btn btn-outline-primary" %>
+    <%= link_to "Manage Plays", admin_plays_path, class: "btn btn-outline-primary" %>
+  </div>
 </div>
 
 <div class="table-container">
@@ -88,62 +100,3 @@
   <% end %>
 </div>
 
-<style>
-  .admin-controls {
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .admin-controls .btn.active {
-    background-color: var(--primary-color);
-    color: white;
-  }
-
-  .race-type-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-  }
-
-  .race-type-badge.5k {
-    background-color: #e3f2fd;
-    color: #1976d2;
-  }
-
-  .race-type-badge.bronco {
-    background-color: #fff3e0;
-    color: #f57c00;
-  }
-
-  .user-link {
-    color: var(--primary-color);
-    text-decoration: none;
-  }
-
-  .user-link:hover {
-    text-decoration: underline;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-  }
-
-  .distance-badge {
-    background-color: #f3e5f5;
-    color: #7b1fa2;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-  }
-
-  .no-distance {
-    color: #999;
-    font-style: italic;
-  }
-</style>

@@ -8,53 +8,65 @@
 
   <!-- Quick Stats Overview -->
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon">👥</div>
-      <div class="stat-content">
-        <h3><%= @total_users %></h3>
-        <p>Total Users</p>
+    <%= link_to admin_users_path, class: "stat-card-link" do %>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3><%= @total_users %></h3>
+          <p>Total Users</p>
+        </div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="stat-card">
-      <div class="stat-icon">🏃‍♂️</div>
-      <div class="stat-content">
-        <h3><%= @total_runs %></h3>
-        <p>Total Runs</p>
+    <%= link_to admin_runs_path, class: "stat-card-link" do %>
+      <div class="stat-card">
+        <div class="stat-icon">🏃‍♂️</div>
+        <div class="stat-content">
+          <h3><%= @total_runs %></h3>
+          <p>Total Runs</p>
+        </div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="stat-card">
-      <div class="stat-icon">📱</div>
-      <div class="stat-content">
-        <h3><%= @total_strava_runs %></h3>
-        <p>Strava Runs</p>
+    <%= link_to admin_runs_path(source: "strava"), class: "stat-card-link" do %>
+      <div class="stat-card">
+        <div class="stat-icon">📱</div>
+        <div class="stat-content">
+          <h3><%= @total_strava_runs %></h3>
+          <p>Strava Runs</p>
+        </div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="stat-card">
-      <div class="stat-icon">✏️</div>
-      <div class="stat-content">
-        <h3><%= @total_manual_runs %></h3>
-        <p>Manual Runs</p>
+    <%= link_to admin_runs_path(source: "manual"), class: "stat-card-link" do %>
+      <div class="stat-card">
+        <div class="stat-icon">✏️</div>
+        <div class="stat-content">
+          <h3><%= @total_manual_runs %></h3>
+          <p>Manual Runs</p>
+        </div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="stat-card">
-      <div class="stat-icon">⏰</div>
-      <div class="stat-content">
-        <h3><%= @pending_plays %></h3>
-        <p>Pending Plays</p>
+    <%= link_to admin_plays_path, class: "stat-card-link" do %>
+      <div class="stat-card">
+        <div class="stat-icon">⏰</div>
+        <div class="stat-content">
+          <h3><%= @pending_plays %></h3>
+          <p>Pending Plays</p>
+        </div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="stat-card">
-      <div class="stat-icon">🎯</div>
-      <div class="stat-content">
-        <h3><%= @active_deadlines %></h3>
-        <p>Active Deadlines</p>
+    <%= link_to admin_race_deadlines_path, class: "stat-card-link" do %>
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-content">
+          <h3><%= @active_deadlines %></h3>
+          <p>Active Deadlines</p>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 
   <!-- Strava Sync Section -->
@@ -806,31 +818,4 @@
     text-align: center;
   }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    .admin-dashboard {
-      padding: 1rem;
-    }
-
-    .sync-status-card {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .dashboard-header h1 {
-      font-size: 2rem;
-    }
-
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .management-cards {
-      grid-template-columns: 1fr;
-    }
-
-    .password-stats {
-      grid-template-columns: 1fr;
-    }
-  }
 </style>

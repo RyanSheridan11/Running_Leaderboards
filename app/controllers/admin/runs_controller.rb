@@ -6,6 +6,7 @@ class Admin::RunsController < ApplicationController
   def index
     @runs = Run.includes(:user).order(created_at: :desc)
     @runs = @runs.where(race_type: params[:race_type]) if params[:race_type].present?
+    @runs = @runs.where(source: params[:source]) if params[:source].present?
   end
 
   def edit

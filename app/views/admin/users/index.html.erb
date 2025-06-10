@@ -19,6 +19,7 @@
         <th>Best 5k Time</th>
         <th>Best Bronco Time</th>
         <th>Member Since</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -46,6 +47,23 @@
             <%= best_bronco ? format_time(best_bronco.time, "bronco") : "N/A" %>
           </td>
           <td><%= user.created_at.strftime("%B %d, %Y") %></td>
+          <td>
+            <div class="admin-actions">
+              <% if user.admin? %>
+                <% if user != current_user %>
+                  <%= link_to "Demote", demote_admin_admin_user_path(user), 
+                      data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to remove admin privileges from #{user.full_name}?" }, 
+                      class: "btn btn-small btn-warning" %>
+                <% else %>
+                  <span class="current-user-note">You</span>
+                <% end %>
+              <% else %>
+                <%= link_to "Make Admin", promote_admin_admin_user_path(user), 
+                    data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to give admin privileges to #{user.full_name}?" }, 
+                    class: "btn btn-small btn-success" %>
+              <% end %>
+            </div>
+          </td>
         </tr>
       <% end %>
     </tbody>
@@ -94,5 +112,45 @@
     text-align: center;
     padding: 2rem;
     color: #666;
+  }
+
+  .admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .current-user-note {
+    color: #666;
+    font-style: italic;
+    font-size: 0.875rem;
+  }
+
+  .btn-small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+  }
+
+  .btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .btn-warning:hover {
+    background-color: #e0a800;
   }
 </style>

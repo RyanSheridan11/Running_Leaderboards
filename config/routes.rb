@@ -27,7 +27,12 @@ Rails.application.routes.draw do
     post "dashboard/backdate-sync", to: "dashboard#trigger_backdate_strava_sync", as: :dashboard_backdate_sync
 
     resources :runs, only: [ :index, :edit, :update, :destroy ]
-    resources :users, only: [ :index ]
+    resources :users, only: [ :index ] do
+      member do
+        patch :promote_admin
+        patch :demote_admin
+      end
+    end
     resources :race_deadlines
     resources :plays, only: [ :index, :show, :destroy ] do
       member do

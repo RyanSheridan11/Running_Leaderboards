@@ -27,7 +27,13 @@ class RunsController < ApplicationController
   end
 
   def create
-    @run = current_user.runs.build(run_params)
+    if current_user&.admin? && params[:run][:user_id].present?
+      user = User.find(params[:run][:user_id])
+      @run = user.runs.build(run_params.except(:user_id))
+    else
+      @run = current_user.runs.build(run_params)
+    end
+    
     race_type = params[:run][:race_type] || "5k"
     time_in_seconds = convert_time_to_seconds(params[:run][:time], race_type)
     @run.source = "manual"
@@ -91,7 +97,13 @@ class RunsController < ApplicationController
       end
     end
 
-    @run.assign_attributes(run_params)
+    # Handle user assignment for admins
+    if current_user&.admin? && params[:run][:user_id].present? && params[:run][:user_id] != @run.user_id.to_s
+      new_user = User.find(params[:run][:user_id])
+      @run.user = new_user
+    end
+
+    @run.assign_attributes(run_params.except(:user_id))
     @run.time = time_in_seconds
     if @run.save
       redirect_to root_path, notice: "Run updated!"
@@ -122,7 +134,11 @@ class RunsController < ApplicationController
   end
 
   def run_params
-    params.require(:run).permit(:date, :race_type)
+    if current_user&.admin?
+      params.require(:run).permit(:date, :race_type, :user_id)
+    else
+      params.require(:run).permit(:date, :race_type)
+    end
   end
 
   def convert_time_to_seconds(time_string, race_type = "5k")

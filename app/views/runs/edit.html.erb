@@ -1,33 +1,66 @@
-<h1>Edit Run</h1>
+<div class="form-container">
+  <h1>✏️ Edit Run</h1>
+  <p class="form-description">
+    Update your 5k or Bronco (1.2k) run details.
+  </p>
 
-<%= form_with model: @run, local: true do |form| %>
-  <% if @run.errors.any? %>
-    <div class="errors">
-      <ul>
-        <% @run.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
+  <%= form_with model: @run, local: true, class: "run-form" do |form| %>
+    <% if @run.errors.any? %>
+      <div class="alert alert-error">
+        <h4><%= pluralize(@run.errors.count, "error") %> prevented this run from being saved:</h4>
+        <ul>
+          <% @run.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% if admin? %>
+      <div class="form-group">
+        <%= form.label :user_id, "Runner*" %>
+        <%= form.select :user_id, 
+            options_for_select(User.order(:firstname, :lastname).map { |u| [u.full_name, u.id] }, @run.user_id), 
+            {}, 
+            { class: "form-control" } %>
+        <small class="form-text">Select the runner for this run</small>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :race_type, "Race Type*" %>
+      <%= form.select :race_type, [["5k", "5k"], ["Bronco (1.2k)", "bronco"]], {}, { id: "race_type_select", class: "form-control" } %>
+      <small class="form-text" id="race_type_help">Choose 5k or Bronco (1.2k)</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :date, "Date*" %>
+      <%= form.date_field :date, class: "form-control" %>
+      <small class="form-text">Select the date of your run</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :time, "Time*", id: "time_label" %>
+      <%= form.text_field :time, value: format_time(@run.time, @run.race_type), id: "time_input", class: "form-control" %>
+      <small class="form-text" id="time_help">Format: <%= @run.race_type == 'bronco' ? 'm:ss for Bronco' : 'mm:ss for 5k' %></small>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Update Run", class: "btn btn-primary" %>
+      <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
-  <div>
-    <%= form.label :race_type, "Race Type" %><br>
-    <%= form.select :race_type, [["5k", "5k"], ["Bronco (1.2k)", "bronco"]], {}, { id: "race_type_select" } %>
-  </div>
-  <div>
-    <%= form.label :date %><br>
-    <%= form.date_field :date %>
-  </div>
-  <div>
-    <%= form.label :time, "Time", id: "time_label" %><br>
-    <%= form.text_field :time, value: format_time(@run.time, @run.race_type), id: "time_input" %>
-    <small id="time_help">Format: <%= @run.race_type == 'bronco' ? 'm:ss for Bronco' : 'mm:ss for 5k' %></small>
-  </div>
-  <div class="btn-group">
-    <%= form.submit "Update Run", class: "btn" %>
-    <%= link_to "Cancel", root_path, class: "btn btn-secondary" %>
-  </div>
-<% end %>
+</div>
+
+<div class="submission-info">
+  <h3>📋 Update Guidelines</h3>
+  <ul>
+    <li>Ensure time is in the correct mm:ss or m:ss format.</li>
+    <% if admin? %>
+      <li>As an admin, you can change the runner associated with this run.</li>
+    <% end %>
+  </ul>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

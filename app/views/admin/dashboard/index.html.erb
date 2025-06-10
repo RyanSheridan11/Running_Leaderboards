@@ -233,10 +233,10 @@
     </div>
 
     <div class="activity-section">
-      <h3>👤 Recent Users</h3>
-      <% if @recent_users.any? %>
+      <h3>👤 Recent User Signups</h3>
+      <% if @recent_user_signups.any? %>
         <div class="recent-list">
-          <% @recent_users.each do |user| %>
+          <% @recent_user_signups.each do |user| %>
             <div class="recent-item">
               <span class="activity-icon">👤</span>
               <div class="activity-details">
@@ -244,14 +244,73 @@
                 <span class="user-stats">
                   <%= pluralize(user.runs.count, 'run') %>
                 </span>
+                <span class="login-status <%= user.last_login_at ? 'has-logged-in' : 'never-logged-in' %>">
+                  <%= user.login_status %>
+                </span>
               </div>
               <span class="activity-date"><%= user.created_at.strftime('%m/%d') %></span>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="empty-state">No recent users</p>
+        <p class="empty-state">No recent signups</p>
       <% end %>
+    </div>
+
+    <div class="activity-section">
+      <h3>🔑 Password Setup Status</h3>
+      <div class="password-stats">
+        <div class="password-stat-card">
+          <div class="stat-number"><%= @users_without_password %></div>
+          <div class="stat-label">Users need password setup</div>
+        </div>
+        <div class="password-stat-card">
+          <div class="stat-number"><%= User.where.not(password_digest: nil).count %></div>
+          <div class="stat-label">Users with passwords</div>
+        </div>
+      </div>
+
+      <% if @users_without_password > 0 %>
+        <div class="password-help">
+          <p>📝 <strong>Setup Instructions:</strong></p>
+          <ul>
+            <li>Users without passwords can visit the login page</li>
+            <li>They'll be automatically redirected to password setup</li>
+            <li>Or they can go directly to <%= link_to "/password/setup", setup_password_path %></li>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="activity-section">
+      <h3>🔐 Recent Logins</h3>
+      <% if @recent_logins.any? %>
+        <div class="recent-list">
+          <% @recent_logins.each do |user| %>
+            <div class="recent-item">
+              <span class="activity-icon">🔐</span>
+              <div class="activity-details">
+                <strong><%= user.full_name %></strong>
+                <span class="user-stats">
+                  <%= pluralize(user.login_count || 0, 'login') %>
+                </span>
+                <span class="login-status">
+                  <%= user.login_status %>
+                </span>
+              </div>
+              <span class="activity-date">
+                <%= user.last_login_at&.strftime('%m/%d %H:%M') %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="empty-state">No recent logins</p>
+      <% end %>
+
+      <div class="login-summary">
+        <p><strong>Summary:</strong> <%= @users_never_logged_in %> users have never logged in</p>
+      </div>
     </div>
   </div>
 </div>
@@ -651,6 +710,102 @@
     color: #155724;
   }
 
+  /* New Login and Password Status Styles */
+  .login-status {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  .login-status.has-logged-in {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .login-status.never-logged-in {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .password-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .password-stat-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid #dee2e6;
+  }
+
+  .password-stat-card .stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+  }
+
+  .password-stat-card .stat-label {
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  .password-help {
+    background: #e3f2fd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .password-help p {
+    margin: 0 0 0.5rem 0;
+    color: #1976d2;
+    font-size: 0.9rem;
+  }
+
+  .password-help ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: #424242;
+  }
+
+  .password-help li {
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .password-help a {
+    color: #1976d2;
+    text-decoration: none;
+    font-family: monospace;
+    background: rgba(25, 118, 210, 0.1);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+
+  .password-help a:hover {
+    text-decoration: underline;
+  }
+
+  .login-summary {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  .login-summary p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .admin-dashboard {
@@ -671,6 +826,10 @@
     }
 
     .management-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .password-stats {
       grid-template-columns: 1fr;
     }
   }

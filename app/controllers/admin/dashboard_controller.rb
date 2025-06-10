@@ -13,7 +13,12 @@ class Admin::DashboardController < ApplicationController
 
     # Get recent activity
     @recent_runs = Run.includes(:user).order(created_at: :desc).limit(10)
-    @recent_users = User.order(created_at: :desc).limit(5)
+
+    # Get user statistics for dashboard
+    @users_without_password = User.where(password_digest: nil).count
+    @recent_user_signups = User.order(created_at: :desc).limit(5)
+    @recent_logins = User.where.not(last_login_at: nil).order(last_login_at: :desc).limit(5)
+    @users_never_logged_in = User.where(last_login_at: nil).count
 
     # Strava sync status (we'll track this in session or cache)
     @last_sync_status = session[:last_strava_sync_status] || "Not run yet"

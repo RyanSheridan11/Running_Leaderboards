@@ -36,6 +36,31 @@ class User < ApplicationRecord
     runs.bronco.order(:time)
   end
 
+  def track_login!
+    self.update_columns(
+      last_login_at: Time.current,
+      login_count: (login_count || 0) + 1
+    )
+  end
+
+  def login_status
+    return "Never logged in" unless last_login_at
+
+    time_ago = Time.current - last_login_at
+    case time_ago
+    when 0..1.hour
+      "Active now"
+    when 1.hour..1.day
+      "Active today"
+    when 1.day..1.week
+      "Active this week"
+    when 1.week..1.month
+      "Active this month"
+    else
+      "Inactive (#{last_login_at.strftime('%b %d, %Y')})"
+    end
+  end
+
   private
 
   def normalize_email

@@ -18,6 +18,7 @@ class SessionsController < ApplicationController
       flash.now[:alert] = "Wrong password"
       render :new, status: :unprocessable_entity
     else
+      user.track_login!
       session[:user_id] = user.id
       redirect_to root_path, notice: "Logged in!"
     end
@@ -64,6 +65,7 @@ class SessionsController < ApplicationController
     @user.password_confirmation = params[:password_confirmation]
 
     if @user.save
+      @user.track_login!
       session[:user_id] = @user.id
       session[:pending_user_id] = nil
       redirect_to root_path, notice: "Password set successfully! Welcome to the running leaderboard!"

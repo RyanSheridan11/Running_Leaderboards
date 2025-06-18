@@ -36,6 +36,22 @@ class UsersController < ApplicationController
     @runs = @user.runs.order(created_at: :desc)
   end
 
+  def update
+    @user = User.find(params[:id])
+
+    # Only allow admins to update user information
+    unless current_user&.admin?
+      redirect_to root_path, alert: "Access denied."
+      return
+    end
+
+    if @user.update(update_user_params)
+      redirect_to user_path(@user), notice: "User information updated successfully."
+    else
+      redirect_to user_path(@user), alert: "Failed to update user information: #{@user.errors.full_messages.join(', ')}"
+    end
+  end
+
   def profile
     redirect_to login_path unless logged_in?
     @user = current_user
@@ -57,5 +73,14 @@ class UsersController < ApplicationController
   rescue ActionController::ParameterMissing => e
     Rails.logger.error "Missing required parameters: #{e.message}"
     raise ActionController::BadRequest, "Required user parameters are missing"
+  end
+
+  def update_user_params
+    permitted_params = params.require(:user).permit(:strava_username)
+
+    # Sanitize parameters
+    permitted_params[:strava_username] = permitted_params[:strava_username]&.strip
+
+    permitted_params
   end
 end

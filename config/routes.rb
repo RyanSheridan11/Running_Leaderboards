@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root "runs#index"
 
-  resources :users, only: [ :new, :create, :show ]
+  resources :users, only: [ :new, :create, :show, :update ]
   resources :runs, only: [ :new, :create, :index, :edit, :update, :destroy ]
   get "bronco_tutorials", to: "runs#bronco_tutorials", as: "bronco_tutorials"
   resources :plays, only: [ :index, :new, :create, :show ]

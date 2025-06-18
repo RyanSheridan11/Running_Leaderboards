@@ -8,11 +8,6 @@ image: ryansheridan/running-leaderboard
 servers:
   web:
     - 192.168.1.70
-  healthcheck:
-    path: /up
-    port: 80  # Changed from 3000 to 80
-    max_attempts: 7
-    interval: 20s
   # job:
   #   hosts:
   #     - 192.168.0.1

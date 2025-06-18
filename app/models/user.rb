@@ -6,6 +6,13 @@ class User < ApplicationRecord
   validates :firstname, presence: true
   validates :lastname, presence: true
   validates :password, length: { minimum: 4 }, if: -> { password.present? }
+  validates :user_type, inclusion: { in: [ "player", "trainer", "coach", "tester" ] }
+
+  # Scopes for filtering by user type
+  scope :players, -> { where(user_type: "player") }
+  scope :trainers, -> { where(user_type: "trainer") }
+  scope :coaches, -> { where(user_type: "coach") }
+  scope :testers, -> { where(user_type: "tester") }
 
   before_validation :normalize_email
   before_create :set_first_user_as_admin

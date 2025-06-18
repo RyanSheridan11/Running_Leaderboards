@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_10_065118) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_18_091613) do
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.date "start_date"
@@ -79,8 +79,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_065118) do
     t.string "email"
     t.datetime "last_login_at"
     t.integer "login_count", default: 0, null: false
+    t.string "user_type", default: "player", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["strava_athlete_id"], name: "index_users_on_strava_athlete_id", unique: true
+    t.index ["user_type"], name: "index_users_on_user_type"
   end
 
   add_foreign_key "plays", "events"

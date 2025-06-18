@@ -5,16 +5,25 @@
 
   <div class="filter-group">
     <strong>Race Type:</strong>
-    <%= link_to "All Runs", admin_runs_path(source: params[:source]), class: "btn btn-secondary #{'active' if params[:race_type].blank?}" %>
-    <%= link_to "5k Runs", admin_runs_path(race_type: "5k", source: params[:source]), class: "btn btn-secondary #{'active' if params[:race_type] == '5k'}" %>
-    <%= link_to "Bronco Runs", admin_runs_path(race_type: "bronco", source: params[:source]), class: "btn btn-secondary #{'active' if params[:race_type] == 'bronco'}" %>
+    <%= link_to "All Runs", admin_runs_path(source: params[:source], user_type: params[:user_type]), class: "btn btn-secondary #{'active' if params[:race_type].blank?}" %>
+    <%= link_to "5k Runs", admin_runs_path(race_type: "5k", source: params[:source], user_type: params[:user_type]), class: "btn btn-secondary #{'active' if params[:race_type] == '5k'}" %>
+    <%= link_to "Bronco Runs", admin_runs_path(race_type: "bronco", source: params[:source], user_type: params[:user_type]), class: "btn btn-secondary #{'active' if params[:race_type] == 'bronco'}" %>
   </div>
 
   <div class="filter-group">
     <strong>Source:</strong>
-    <%= link_to "All Sources", admin_runs_path(race_type: params[:race_type]), class: "btn btn-secondary #{'active' if params[:source].blank?}" %>
-    <%= link_to "Strava", admin_runs_path(race_type: params[:race_type], source: "strava"), class: "btn btn-secondary #{'active' if params[:source] == 'strava'}" %>
-    <%= link_to "Manual", admin_runs_path(race_type: params[:race_type], source: "manual"), class: "btn btn-secondary #{'active' if params[:source] == 'manual'}" %>
+    <%= link_to "All Sources", admin_runs_path(race_type: params[:race_type], user_type: params[:user_type]), class: "btn btn-secondary #{'active' if params[:source].blank?}" %>
+    <%= link_to "Strava", admin_runs_path(race_type: params[:race_type], source: "strava", user_type: params[:user_type]), class: "btn btn-secondary #{'active' if params[:source] == 'strava'}" %>
+    <%= link_to "Manual", admin_runs_path(race_type: params[:race_type], source: "manual", user_type: params[:user_type]), class: "btn btn-secondary #{'active' if params[:source] == 'manual'}" %>
+  </div>
+
+  <div class="filter-group">
+    <strong>User Type:</strong>
+    <%= link_to "All Types", admin_runs_path(race_type: params[:race_type], source: params[:source]), class: "btn btn-secondary #{'active' if params[:user_type].blank?}" %>
+    <%= link_to "Players", admin_runs_path(race_type: params[:race_type], source: params[:source], user_type: "player"), class: "btn btn-secondary #{'active' if params[:user_type] == 'player'}" %>
+    <%= link_to "Trainers", admin_runs_path(race_type: params[:race_type], source: params[:source], user_type: "trainer"), class: "btn btn-secondary #{'active' if params[:user_type] == 'trainer'}" %>
+    <%= link_to "Coaches", admin_runs_path(race_type: params[:race_type], source: params[:source], user_type: "coach"), class: "btn btn-secondary #{'active' if params[:user_type] == 'coach'}" %>
+    <%= link_to "Testers", admin_runs_path(race_type: params[:race_type], source: params[:source], user_type: "tester"), class: "btn btn-secondary #{'active' if params[:user_type] == 'tester'}" %>
   </div>
 
   <div class="admin-nav">
@@ -30,6 +39,7 @@
       <tr>
         <th>Rank</th>
         <th>User</th>
+        <th>User Type</th>
         <th>Race Type</th>
         <th>Time</th>
         <th>Date</th>
@@ -48,6 +58,11 @@
           </td>
           <td>
             <%= link_to (run.user.full_name.present? ? run.user.full_name : run.user.email), user_path(run.user), class: "user-link" %>
+          </td>
+          <td>
+            <span class="user-type-badge <%= run.user.user_type %>">
+              <%= run.user.user_type.titleize %>
+            </span>
           </td>
           <td>
             <span class="race-type-badge <%= run.race_type %>">
@@ -99,4 +114,3 @@
     </div>
   <% end %>
 </div>
-

@@ -7,6 +7,9 @@
   <% end %>
   <% if @user.admin? %>
     <span class="admin-badge">Admin</span>
+     <span class="user-type-badge <%= @user.user_type %>">
+      <%= @user.user_type.titleize %>
+    </span>
   <% end %>
 </div>
 
@@ -82,4 +85,3 @@
 <div class="back-link">
   <%= link_to "← Back to Leaderboard", root_path, class: "btn btn-secondary" %>
 </div>
-

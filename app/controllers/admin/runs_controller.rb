@@ -7,6 +7,11 @@ class Admin::RunsController < ApplicationController
     @runs = Run.includes(:user).order(created_at: :desc)
     @runs = @runs.where(race_type: params[:race_type]) if params[:race_type].present?
     @runs = @runs.where(source: params[:source]) if params[:source].present?
+
+    # Filter by user type
+    if params[:user_type].present?
+      @runs = @runs.joins(:user).where(users: { user_type: params[:user_type] })
+    end
   end
 
   def edit

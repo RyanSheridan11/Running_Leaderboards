@@ -1086,6 +1086,53 @@ label {
   font-weight: bold;
 }
 
+/* User type badges */
+.user-type-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.user-type-badge.player {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.user-type-badge.trainer {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.user-type-badge.coach {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.user-type-badge.tester {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+/* Inline form controls for admin */
+.inline-form {
+  display: inline-block;
+  margin: 0.25rem 0;
+}
+
+.form-control-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  background-color: white;
+}
+
+.user-type-controls {
+  margin: 0.25rem 0;
+}
+
 .no-distance {
   color: #999;
   font-style: italic;
@@ -1784,7 +1831,6 @@ label {
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 1rem;
 }
 
 .run-form .form-control:focus {

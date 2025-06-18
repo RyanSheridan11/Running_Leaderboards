@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       member do
         patch :promote_admin
         patch :demote_admin
+        patch :update_user_type
       end
     end
     resources :race_deadlines

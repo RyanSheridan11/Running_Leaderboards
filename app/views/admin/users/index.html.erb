@@ -2,9 +2,21 @@
 
 <div class="admin-controls">
   <%= link_to "← Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
-  <%= link_to "Manage Runs", admin_runs_path, class: "btn btn-outline-primary" %>
-  <%= link_to "Race Deadlines", admin_race_deadlines_path, class: "btn btn-outline-primary" %>
-  <%= link_to "Manage Plays", admin_plays_path, class: "btn btn-outline-primary" %>
+
+  <div class="filter-group">
+    <strong>User Type:</strong>
+    <%= link_to "All Types", admin_users_path, class: "btn btn-secondary #{'active' if params[:user_type].blank?}" %>
+    <%= link_to "Players", admin_users_path(user_type: "player"), class: "btn btn-secondary #{'active' if params[:user_type] == 'player'}" %>
+    <%= link_to "Trainers", admin_users_path(user_type: "trainer"), class: "btn btn-secondary #{'active' if params[:user_type] == 'trainer'}" %>
+    <%= link_to "Coaches", admin_users_path(user_type: "coach"), class: "btn btn-secondary #{'active' if params[:user_type] == 'coach'}" %>
+    <%= link_to "Testers", admin_users_path(user_type: "tester"), class: "btn btn-secondary #{'active' if params[:user_type] == 'tester'}" %>
+  </div>
+
+  <div class="admin-nav">
+    <%= link_to "Manage Runs", admin_runs_path, class: "btn btn-outline-primary" %>
+    <%= link_to "Race Deadlines", admin_race_deadlines_path, class: "btn btn-outline-primary" %>
+    <%= link_to "Manage Plays", admin_plays_path, class: "btn btn-outline-primary" %>
+  </div>
 </div>
 
 <div class="table-container">
@@ -12,6 +24,7 @@
     <thead>
       <tr>
         <th>Name</th>
+        <th>User Type</th>
         <th>Admin</th>
         <th>Total Runs</th>
         <th>5k Runs</th>
@@ -27,6 +40,11 @@
         <tr>
           <td>
             <%= link_to user.full_name, user_path(user), class: "user-link" %>
+          </td>
+          <td>
+            <span class="user-type-badge <%= user.user_type %>">
+              <%= user.user_type.titleize %>
+            </span>
           </td>
           <td>
             <% if user.admin? %>
@@ -62,6 +80,23 @@
                     data: { turbo_method: :patch, turbo_confirm: "Are you sure you want to give admin privileges to #{user.full_name}?" },
                     class: "btn btn-small btn-success" %>
               <% end %>
+
+              <div class="user-type-controls">
+                <%= form_with url: update_user_type_admin_user_path(user), method: :patch, local: true, class: "inline-form" do |f| %>
+                  <%= f.select :user_type,
+                      options_for_select([
+                        ['Player', 'player'],
+                        ['Trainer', 'trainer'],
+                        ['Coach', 'coach'],
+                        ['Tester', 'tester']
+                      ], user.user_type),
+                      {},
+                      {
+                        class: "form-control form-control-sm",
+                        onchange: "this.form.submit();"
+                      } %>
+                <% end %>
+              </div>
 
               <% if user != current_user %>
                 <%= link_to "Delete", admin_user_path(user),

@@ -51,6 +51,7 @@ User.find_or_create_by!(email: "ryansheridan11@gmail.com".downcase) do |user|
   user.password = "1234"
   user.strava_username = "ryans"
   user.admin = true
+  user.user_type = "coach"
 end
 
 User.find_or_create_by!(email: "nick.bielby21@gmail.com".downcase) do |user|
@@ -59,6 +60,7 @@ User.find_or_create_by!(email: "nick.bielby21@gmail.com".downcase) do |user|
   user.strava_username = "nickb"
   user.password = "1234"
   user.admin = true
+  user.user_type = "coach"
 end
 
 

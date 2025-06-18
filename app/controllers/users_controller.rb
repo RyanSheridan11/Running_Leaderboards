@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    permitted_params = params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :strava_username)
+    permitted_params = params.require(:user).permit(:email, :password, :password_confirmation, :firstname, :lastname, :strava_username, :user_type)
 
     # Sanitize and normalize parameters
     permitted_params[:email] = permitted_params[:email]&.strip&.downcase

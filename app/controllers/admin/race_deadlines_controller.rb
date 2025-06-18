@@ -14,6 +14,12 @@ module Admin
     def show
       @users_with_submissions = @race_deadline.users_with_submissions
       @users_without_submissions = @race_deadline.users_without_submissions
+
+      # Filter by user type if specified
+      if params[:user_type].present?
+        @users_with_submissions = @users_with_submissions.where(user_type: params[:user_type])
+        @users_without_submissions = @users_without_submissions.where(user_type: params[:user_type])
+      end
     end
 
     # GET /race_deadlines/new
@@ -32,7 +38,7 @@ module Admin
 
       respond_to do |format|
         if @race_deadline.save
-          format.html { redirect_to admin_race_deadlines_path, notice: 'Race deadline was successfully created.' }
+          format.html { redirect_to admin_race_deadlines_path, notice: "Race deadline was successfully created." }
           format.json { render :show, status: :created, location: @race_deadline }
         else
           format.html { render :new }
@@ -46,7 +52,7 @@ module Admin
     def update
       respond_to do |format|
         if @race_deadline.update(race_deadline_params)
-          format.html { redirect_to admin_race_deadlines_path, notice: 'Race deadline was successfully updated.' }
+          format.html { redirect_to admin_race_deadlines_path, notice: "Race deadline was successfully updated." }
           format.json { render :show, status: :ok, location: @race_deadline }
         else
           format.html { render :edit }
@@ -60,7 +66,7 @@ module Admin
     def destroy
       @race_deadline.destroy
       respond_to do |format|
-        format.html { redirect_to admin_race_deadlines_url, notice: 'Race deadline was successfully destroyed.' }
+        format.html { redirect_to admin_race_deadlines_url, notice: "Race deadline was successfully destroyed." }
         format.json { head :no_content }
       end
     end

@@ -23,6 +23,12 @@ proxy:
     - 192.168.1.70
     - katipo.sheridan.kiwi.nz
 
+healthcheck:
+  path: /up
+  port: 80  # Changed from 3000 to 80
+  max_attempts: 7
+  interval: 20s
+
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub

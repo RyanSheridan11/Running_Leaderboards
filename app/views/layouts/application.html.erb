@@ -29,6 +29,12 @@
             <%= link_to "Add Run", new_run_path, class: "nav-link" %>
             <%= link_to "My Profile", profile_path, class: "nav-link" %>
             <% if current_user.admin? %>
+              <% if current_deadline %>
+                <%= link_to admin_race_deadline_path(current_deadline), class: "nav-link", title: "Current #{current_deadline.race_type} deadline submissions" do %>
+                  <span class="nav-text-full"><%= current_deadline_link_text(current_deadline) %></span>
+                  <span class="nav-text-short"><%= current_deadline_link_text(current_deadline, short: true) %></span>
+                <% end %>
+              <% end %>
               <%= link_to "Admin Dashboard", admin_dashboard_path, class: "nav-link" %>
             <% end %>
             <%= link_to "Log out", logout_path, data: { turbo_method: :delete }, class: "nav-link" %>

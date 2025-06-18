@@ -16,4 +16,21 @@ module ApplicationHelper
       content_tag :span, "○ Not 5K", class: "badge badge-secondary"
     end
   end
+
+  def current_deadline
+    @current_deadline ||= RaceDeadline.active
+      .where("start_date <= ? AND due_date >= ?", Date.current, Date.current)
+      .order(:due_date)
+      .first
+  end
+
+  def current_deadline_link_text(deadline, short: false)
+    return nil unless deadline
+
+    if short
+      "#{deadline.race_type.upcase}"
+    else
+      "#{deadline.race_type.upcase} Submissions"
+    end
+  end
 end

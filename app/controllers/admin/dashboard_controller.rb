@@ -10,9 +10,11 @@ class Admin::DashboardController < ApplicationController
     @total_manual_runs = Run.where(source: "manual").count
     @pending_plays = Play.where(status: "pending").count
     @active_deadlines = RaceDeadline.active.count
+    @total_feedbacks = Feedback.count
 
     # Get recent activity
     @recent_runs = Run.includes(:user).order(created_at: :desc).limit(10)
+    @recent_feedbacks = Feedback.includes(:user, :event).order(created_at: :desc).limit(5)
 
     # Get user statistics for dashboard
     @users_without_password = User.where(password_digest: nil).count

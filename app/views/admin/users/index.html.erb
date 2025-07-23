@@ -31,6 +31,7 @@
         <th>Bronco Runs</th>
         <th>Best 5k Time</th>
         <th>Best Bronco Time</th>
+        <th>Feedback Count</th>
         <th>Member Since</th>
         <th>Actions</th>
       </tr>
@@ -63,6 +64,14 @@
           <td>
             <% best_bronco = user.runs.where(race_type: "bronco").order(:time).first %>
             <%= best_bronco ? format_time(best_bronco.time, "bronco") : "N/A" %>
+          </td>
+          <td>
+            <% feedback_count = user.feedbacks.count %>
+            <% if feedback_count > 0 %>
+              <%= link_to feedback_count, user_feedbacks_path(user), class: "feedback-count-link" %>
+            <% else %>
+              <%= feedback_count %>
+            <% end %>
           </td>
           <td><%= user.created_at.strftime("%B %d, %Y") %></td>
           <td>

@@ -8,6 +8,24 @@
   </div>
 <% end %>
 
+<% if @user_recent_feedback %>
+  <div class="recent-feedback-section">
+    <h2>📝 Your Recent Feedback</h2>
+    <div class="feedback-card">
+      <div class="feedback-header">
+        <strong>Event: <%= @user_recent_feedback.event.name %></strong>
+      </div>
+      <div class="feedback-content">
+        <%= simple_format(@user_recent_feedback.content) %>
+      </div>
+      <div class="feedback-footer">
+        <span class="feedback-date"><%= @user_recent_feedback.created_at.strftime("%B %d, %Y") %></span>
+        <%= link_to "View All Feedback", user_feedbacks_path(current_user), class: "feedback-link" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <div class="leaderboards-row" style="gap: 2rem; ">
   <div class="table-container" style="width:48%; display:inline-block; vertical-align: top;">
     <h1>5k PB Leaderboard</h1>

@@ -11,6 +11,12 @@ class RunsController < ApplicationController
     @unique_5k_runs = @five_k_runs.uniq(&:user_id).first(10)
     # Only each user's personal best for bronco, limit to top 10
     @unique_bronco_runs = @bronco_runs.uniq(&:user_id).first(10)
+
+    # Get current user's recent feedback for display (only if logged in)
+    if logged_in?
+      @user_recent_feedback = current_user.most_recent_feedback
+    end
+
     @top_plays = Play.approved.top_rated.limit(10)
     @current_deadlines = RaceDeadline.active.where("start_date <= ? AND due_date >= ?", Date.current, Date.current)
     @events = Event.order(:start_date)

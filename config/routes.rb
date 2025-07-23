@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
   root "runs#index"
 
-  resources :users, only: [ :new, :create, :show, :update ]
+  resources :users, only: [ :new, :create, :show, :update ] do
+    resources :feedbacks, except: [ :destroy ]
+  end
   resources :runs, only: [ :new, :create, :index, :edit, :update, :destroy ]
   get "bronco_tutorials", to: "runs#bronco_tutorials", as: "bronco_tutorials"
   resources :plays, only: [ :index, :new, :create, :show ]
+  resources :feedbacks, only: [ :index, :destroy ]
 
   # Voting routes
   post "/runs/vote", to: "runs#create_vote", as: :run_vote

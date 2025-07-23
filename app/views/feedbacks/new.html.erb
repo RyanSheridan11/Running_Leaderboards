@@ -1,0 +1,34 @@
+<% content_for :title, "New Feedback for #{@user.full_name}" %>
+
+<h1>Add Feedback for <%= @user.full_name %></h1>
+
+<%= form_with model: [@user, @feedback], local: true, class: "form" do |form| %>
+  <% if @feedback.errors.any? %>
+    <div class="alert alert-error">
+      <h4><%= pluralize(@feedback.errors.count, "error") %> prohibited this feedback from being saved:</h4>
+      <ul>
+        <% @feedback.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :event_id, "Event" %>
+    <%= form.select :event_id,
+          options_for_select(@events.map { |e| [e.name, e.id] }, @feedback.event_id),
+          { prompt: 'Select an event' },
+          { class: 'form-control', required: true } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :content, "Feedback" %>
+    <%= form.text_area :content, class: 'form-control', rows: 6, required: true %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit "Create Feedback", class: "btn btn-primary" %>
+    <%= link_to "Cancel", user_feedbacks_path(@user), class: "btn btn-secondary" %>
+  </div>
+<% end %>

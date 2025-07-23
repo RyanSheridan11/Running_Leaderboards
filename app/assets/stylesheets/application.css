@@ -1948,3 +1948,196 @@ label {
 .nav-text-short {
   display: none;
 }
+
+/* ========================================
+   Feedback Styles
+   ======================================== */
+.feedback-section {
+  margin: 2rem 0;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.feedback-header h1,
+.feedback-header h2 {
+  margin: 0;
+}
+
+.quick-add-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.feedback-item {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-item .feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.feedback-item h3,
+.feedback-item h4 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.feedback-date {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.feedback-content {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Recent Feedback on Index */
+.recent-feedback-section {
+  margin: 2rem 0;
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recent-feedback-section h2 {
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
+
+.feedback-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.feedback-card {
+  background: var(--light-gray);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.feedback-card .feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.feedback-card .feedback-header strong {
+  color: var(--primary-color);
+}
+
+.feedback-event {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.feedback-card .feedback-content {
+  margin-bottom: 0.75rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.feedback-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.feedback-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.feedback-link:hover {
+  text-decoration: underline;
+}
+
+/* Admin dashboard feedback preview */
+.feedback-preview {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.event-name {
+  color: var(--info-color);
+  font-size: 0.9rem;
+}
+
+/* Admin users table feedback count link */
+.feedback-count-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background-color: var(--light-gray);
+  transition: background-color 0.2s ease;
+}
+
+.feedback-count-link:hover {
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .feedback-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .feedback-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-item .feedback-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .feedback-actions {
+    justify-content: flex-start;
+  }
+}

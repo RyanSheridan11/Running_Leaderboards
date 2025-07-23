@@ -4,7 +4,7 @@ class Admin::UsersController < ApplicationController
   before_action :set_user, only: [ :promote_admin, :demote_admin, :destroy, :update_user_type ]
 
   def index
-    @users = User.includes(:runs).order(:firstname)
+    @users = User.includes(:runs, :feedbacks).order(:firstname)
 
     # Filter by user type if specified
     if params[:user_type].present?

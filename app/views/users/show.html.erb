@@ -103,6 +103,43 @@
   <% end %>
 </div>
 
+<div class="feedback-section">
+  <div class="feedback-header">
+    <h2>Feedback for <%= @user.full_name %></h2>
+    <% if admin? %>
+      <%= link_to "Add Feedback", new_user_feedback_path(@user), class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <% if @feedbacks.any? %>
+    <div class="feedback-list">
+      <% @feedbacks.each do |feedback| %>
+        <div class="feedback-item">
+          <div class="feedback-header">
+            <h4>Event: <%= feedback.event.name %></h4>
+            <span class="feedback-date"><%= feedback.created_at.strftime("%B %d, %Y") %></span>
+          </div>
+          <div class="feedback-content">
+            <%= simple_format(feedback.content) %>
+          </div>
+          <% if admin? %>
+            <div class="feedback-actions">
+              <%= link_to "Edit", edit_user_feedback_path(@user, feedback), class: "btn btn-small btn-secondary" %>
+              <%= link_to "Delete", feedback_path(feedback),
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "btn btn-small btn-danger" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>No feedback yet.</p>
+    </div>
+  <% end %>
+</div>
+
 <div class="back-link">
   <%= link_to "← Back to Leaderboard", root_path, class: "btn btn-secondary" %>
 </div>

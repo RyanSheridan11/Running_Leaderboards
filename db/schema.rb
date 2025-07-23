@@ -10,13 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_18_091613) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_23_091509) do
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.date "start_date"
     t.date "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "feedbacks", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "event_id", null: false
+    t.text "content"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["event_id"], name: "index_feedbacks_on_event_id"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "plays", force: :cascade do |t|
@@ -85,6 +95,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_091613) do
     t.index ["user_type"], name: "index_users_on_user_type"
   end
 
+  add_foreign_key "feedbacks", "events"
+  add_foreign_key "feedbacks", "users"
   add_foreign_key "plays", "events"
   add_foreign_key "plays", "users"
   add_foreign_key "runs", "users"

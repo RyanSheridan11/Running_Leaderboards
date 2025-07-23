@@ -34,6 +34,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @runs = @user.runs.order(created_at: :desc)
+    @feedbacks = @user.feedbacks.includes(:event).recent
   end
 
   def update
@@ -41,7 +42,7 @@ class UsersController < ApplicationController
 
     # Only allow admins to update user information
     unless current_user&.admin?
-      redirect_to root_path, alert: "Access denied."
+      redirect_to root_path, alert: "You must be an admin to access this section."
       return
     end
 
@@ -56,6 +57,7 @@ class UsersController < ApplicationController
     redirect_to login_path unless logged_in?
     @user = current_user
     @runs = @user.runs.order(created_at: :desc)
+    @feedbacks = @user.feedbacks.includes(:event).recent
   end
 
   private

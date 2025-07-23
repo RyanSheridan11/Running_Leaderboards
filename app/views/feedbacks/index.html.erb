@@ -1,0 +1,55 @@
+<% if @user %>
+  <% content_for :title, "Feedback for #{@user.full_name}" %>
+  <div class="feedback-header">
+    <h1>Feedback for <%= @user.full_name %></h1>
+    <% if admin? %>
+      <%= link_to "Add New Feedback", new_user_feedback_path(@user), class: "btn btn-primary" %>
+    <% end %>
+  </div>
+<% else %>
+  <% content_for :title, "All Feedback - Admin View" %>
+  <div class="feedback-header">
+    <h1>All Feedback</h1>
+    <div class="admin-actions">
+      <% if @users.any? %>
+        <%= form_with url: "", method: :get, local: true, class: "quick-add-form" do |form| %>
+          <%= form.select "user_id",
+                options_for_select(@users.map { |u| [u.full_name, u.id] }),
+                { prompt: 'Select user to add feedback...' },
+                { class: 'form-control', onchange: 'if(this.value) window.location = "/users/" + this.value + "/feedbacks/new";' } %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @feedbacks.any? %>
+  <div class="feedback-list">
+    <% @feedbacks.each do |feedback| %>
+      <div class="feedback-item">
+        <div class="feedback-header">
+          <h3>
+            <% unless @user %>
+              <%= feedback.user.full_name %> -
+            <% end %>
+            Event: <%= feedback.event.name %>
+          </h3>
+          <span class="feedback-date"><%= feedback.created_at.strftime("%B %d, %Y") %></span>
+        </div>
+        <div class="feedback-content">
+          <%= simple_format(feedback.content) %>
+        </div>
+        <% if admin? %>
+          <div class="feedback-actions">
+            <%= link_to "Edit", edit_user_feedback_path(feedback.user, feedback), class: "btn btn-small btn-secondary" %>
+            <%= link_to "Delete", feedback_path(feedback),
+                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                class: "btn btn-small btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No feedback yet.</p>
+<% end %>

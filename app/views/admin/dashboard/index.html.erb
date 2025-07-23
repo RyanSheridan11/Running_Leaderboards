@@ -67,6 +67,16 @@
         </div>
       </div>
     <% end %>
+
+    <%= link_to feedbacks_path, class: "stat-card-link" do %>
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-content">
+          <h3><%= @total_feedbacks %></h3>
+          <p>Total Feedback</p>
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <!-- Strava Sync Section -->
@@ -323,6 +333,30 @@
       <div class="login-summary">
         <p><strong>Summary:</strong> <%= @users_never_logged_in %> users have never logged in</p>
       </div>
+    </div>
+
+    <div class="activity-section">
+      <h3>📝 Recent Feedback</h3>
+      <% if @recent_feedbacks.any? %>
+        <div class="recent-list">
+          <% @recent_feedbacks.each do |feedback| %>
+            <div class="recent-item">
+              <span class="activity-icon">📝</span>
+              <div class="activity-details">
+                <strong><%= feedback.user.full_name %></strong>
+                <span class="event-name">(<%= feedback.event.name %>)</span>
+                <span class="feedback-preview"><%= truncate(feedback.content, length: 50) %></span>
+              </div>
+              <span class="activity-date"><%= feedback.created_at.strftime('%m/%d') %></span>
+            </div>
+          <% end %>
+        </div>
+        <div class="section-link">
+          <%= link_to "View All Feedback", feedbacks_path, class: "btn btn-outline-primary btn-sm" %>
+        </div>
+      <% else %>
+        <p class="empty-state">No recent feedback</p>
+      <% end %>
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_secure_password validations: false
   has_many :runs, dependent: :destroy
   has_many :plays, dependent: :destroy
+  has_many :feedbacks, dependent: :destroy
   validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :firstname, presence: true
   validates :lastname, presence: true
@@ -48,6 +49,10 @@ class User < ApplicationRecord
       last_login_at: Time.current,
       login_count: (login_count || 0) + 1
     )
+  end
+
+  def most_recent_feedback
+    feedbacks.recent.first
   end
 
   def login_status
